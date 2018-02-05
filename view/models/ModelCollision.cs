@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TanksIndieGame.view.models
 {
-    public class ModelCollision
+    public class ModelCollision : ICloneable
     {
         private float length; // Z
         private float weight; // X
@@ -52,7 +52,11 @@ namespace TanksIndieGame.view.models
                 height = value;
             }
         }
-
         #endregion
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

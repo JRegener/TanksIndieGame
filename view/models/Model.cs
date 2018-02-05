@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TanksIndieGame.view.shaders;
+using TanksIndieGame.view.shaders.objects;
 
 namespace TanksIndieGame.view.models
 {
-    public class Model
+    public class Model : ICloneable
     {
         private string tag;
 
@@ -27,6 +28,18 @@ namespace TanksIndieGame.view.models
             this.modelView = modelView;
             this.baseShader = baseShader;
             this.modelCollision = modelCollision;
+        }
+
+        public string Tag
+        {
+            get
+            {
+                return tag;
+            }
+            set
+            {
+                tag = value;
+            }
         }
 
         public BaseModel BaseModel
@@ -79,6 +92,19 @@ namespace TanksIndieGame.view.models
             {
                 modelCollision = value;
             }
+        }
+
+
+        public object Clone()
+        {
+            Model model = (Model)this.MemberwiseClone();
+            model.Tag = String.Copy(this.tag);
+            model.BaseModel = (BaseModel)this.baseModel.Clone();
+            model.ModelView = (ModelView)this.modelView.Clone();
+            model.BaseShader = (ModelShader)(baseShader as ModelShader).Clone();
+            model.ModelCollision = (ModelCollision)this.modelCollision.Clone();
+
+            return model;
         }
     }
 }

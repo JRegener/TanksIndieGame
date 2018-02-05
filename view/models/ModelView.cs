@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace TanksIndieGame.view.models
 {
-    public class ModelView
+    public class ModelView : ICloneable
     {
-        private uint vaoId; 
+        private uint vaoId;
 
         private uint textureId;
 
@@ -23,6 +23,7 @@ namespace TanksIndieGame.view.models
         private uint[] indices;
         private float[] uv;
         private float[] normals;
+
 
         public ModelView(uint vaoId, uint textureId, uint indicesId, uint verticesId, uint uvId, uint normalsId, Image texture, float[] vertices, uint[] indices, float[] uv, float[] normals)
         {
@@ -185,5 +186,19 @@ namespace TanksIndieGame.view.models
         }
 
         #endregion
+
+        public object Clone()
+        {
+
+            ModelView modelView = (ModelView)this.MemberwiseClone();
+
+            modelView.Texture = (Image)this.texture.Clone();
+            modelView.Indices = (uint[])this.indices.Clone();
+            modelView.Vertices = (float[])this.vertices.Clone();
+            modelView.Uv = (float[])this.uv.Clone();
+            modelView.Normals = (float[])this.normals.Clone();
+
+            return modelView;
+        }
     }
 }

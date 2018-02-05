@@ -47,7 +47,7 @@ namespace TanksIndieGame
 
         private void glControl_OpenGLInitialized(object sender, EventArgs e)
         {
-
+            
             gl = glControl.OpenGL;
             renderer = new Renderer(SceneSettings.FOV, SceneSettings.NEAR,
                 SceneSettings.FAR, glControl.Width, glControl.Height);
@@ -59,7 +59,22 @@ namespace TanksIndieGame
                 @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.obj", 
                 Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.png"),
                 Resource.vertexModelShader, Resource.fragmentModelShader, gameControl.Lights);
+            Model modelClone = (Model)model.Clone();
+            modelClone.BaseModel.PosX = -5f;
+
+            Model tank = OBJLoader.LoadObjModel("tank", gl, loader,
+                @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\tank.obj",
+                Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\tank.png"),
+                Resource.vertexModelShader, Resource.fragmentModelShader, gameControl.Lights);
+
+            tank.BaseModel.Scale = 0.1f;
+            tank.BaseModel.PosX = 5f;
+
             gameControl.RenderModels.Add(model);
+            gameControl.RenderModels.Add(modelClone);
+            gameControl.RenderModels.Add(tank);
+
+
         }
 
         private void glControl_OpenGLDraw(object sender, RenderEventArgs args)

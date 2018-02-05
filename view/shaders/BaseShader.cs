@@ -9,7 +9,7 @@ using TanksIndieGame.view.models;
 
 namespace TanksIndieGame.view.shaders
 {
-    public abstract class BaseShader
+    public abstract class BaseShader 
     {
         public abstract void LoadVariables();
 
@@ -23,7 +23,7 @@ namespace TanksIndieGame.view.shaders
         protected int locationProjectionMatrix;
         protected int locationViewMatrix;
 
-        private Light lights;
+        protected Light lights;
 
         public string VertexShaderCode
         {
@@ -45,8 +45,10 @@ namespace TanksIndieGame.view.shaders
             this.lights = lights;
             CreateShaders();
         }
-
-        private void CreateShaders()
+        
+        // Protected modifer use fo close methof from external impact,
+        // but i can use it in copy method in ModelShader class
+        protected void CreateShaders()
         {
             AddAttributeLocation(0, "position");
             AddAttributeLocation(1, "textureCoordinates");
@@ -113,8 +115,6 @@ namespace TanksIndieGame.view.shaders
             shaderProgram.SetUniform3(gl, "lightPosition", lights.Position.x, lights.Position.y, lights.Position.z);
             shaderProgram.SetUniform3(gl, "lightColor", lights.Color.x, lights.Color.y, lights.Color.z);
         }
-
-
 
         //not used
         //private void GetAllUniformLocations(OpenGL gl)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TanksIndieGame.view.models
 {
-    public class BaseModel
+    public class BaseModel : ICloneable
     {
         private float posX, posY, posZ;
 
@@ -128,7 +128,12 @@ namespace TanksIndieGame.view.models
         {
             get { return new vec3(rotX, rotY, rotZ); }
         }
-
         #endregion
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+
     }
 }
