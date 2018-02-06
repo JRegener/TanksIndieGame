@@ -6,11 +6,26 @@ using System.Threading.Tasks;
 
 namespace TanksIndieGame.view.models
 {
-    public class ModelCollision : ICloneable
+    public class ModelCollision
     {
         private float length; // Z
         private float weight; // X
         private float height; // Y
+
+
+        public ModelCollision(ModelCollision modelCollision)
+        {
+            this.length = modelCollision.Length;
+            this.weight = modelCollision.Weight;
+            this.height = modelCollision.Height;
+        }
+
+        public ModelCollision(float length, float weight, float height)
+        {
+            this.length = length;
+            this.weight = weight;
+            this.height = height;
+        }
 
 
         #region properties
@@ -54,9 +69,5 @@ namespace TanksIndieGame.view.models
         }
         #endregion
 
-        public object Clone()
-        {
-            return this.MemberwiseClone();
-        }
     }
 }

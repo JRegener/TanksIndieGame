@@ -46,7 +46,7 @@ namespace TanksIndieGame
             this.glControl.Name = "glControl";
             this.glControl.OpenGLVersion = SharpGL.Version.OpenGLVersion.OpenGL4_2;
             this.glControl.RenderContextType = SharpGL.RenderContextType.NativeWindow;
-            this.glControl.RenderTrigger = SharpGL.RenderTrigger.TimerBased;
+            this.glControl.RenderTrigger = SharpGL.RenderTrigger.Manual;
             this.glControl.Size = new System.Drawing.Size(861, 572);
             this.glControl.TabIndex = 0;
             this.glControl.OpenGLInitialized += new System.EventHandler(this.glControl_OpenGLInitialized);

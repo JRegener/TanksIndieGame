@@ -85,10 +85,6 @@ namespace TanksIndieGame.view.render
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_S, OpenGL.GL_REPEAT);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_T, OpenGL.GL_REPEAT);
-            //gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
-            //gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
-            //gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_S, OpenGL.GL_CLAMP_TO_BORDER);
-            //gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_T, OpenGL.GL_CLAMP_TO_BORDER);
 
             Bitmap bitmap = new Bitmap(texture);
 
@@ -142,9 +138,9 @@ namespace TanksIndieGame.view.render
             return new ModelShader(gl, vertexShaderCode, fragmentShaderCode, lights);
         }
 
-        private ModelCollision LoadModelCollision()
+        private ModelCollision LoadModelCollision(float length, float weight, float height)
         {
-            return new ModelCollision();
+            return new ModelCollision(length, weight, height);
         }
 
         public Model LoadModel(string objectTag, OpenGL gl, float posX, float posY, float posZ,
@@ -155,9 +151,9 @@ namespace TanksIndieGame.view.render
             BaseModel baseModel = LoadBaseModel(posX, posY, posZ, rotX, rotY, rotZ, scale);
             ModelView modelView = LoadModelView(gl, vertices, indices, uv, normals, texture);
             BaseShader modelShader = LoadModelShader(gl, vertexShaderCode, fragmentShaderCode, lights);
-            ModelCollision modelCollision = LoadModelCollision();
+            ModelCollision modelCollision = LoadModelCollision(0,0,0);
 
-            return new Model(objectTag, baseModel, modelView, modelShader, modelCollision);
+            return new Model(gl,this, objectTag, baseModel, modelView, modelShader, modelCollision);
         }
 
         //public void FreeModel(OpenGL gl, Model model)

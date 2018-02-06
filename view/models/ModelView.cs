@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TanksIndieGame.view.models
 {
-    public class ModelView : ICloneable
+    public class ModelView 
     {
         private uint vaoId;
 
@@ -187,18 +187,5 @@ namespace TanksIndieGame.view.models
 
         #endregion
 
-        public object Clone()
-        {
-
-            ModelView modelView = (ModelView)this.MemberwiseClone();
-
-            modelView.Texture = (Image)this.texture.Clone();
-            modelView.Indices = (uint[])this.indices.Clone();
-            modelView.Vertices = (float[])this.vertices.Clone();
-            modelView.Uv = (float[])this.uv.Clone();
-            modelView.Normals = (float[])this.normals.Clone();
-
-            return modelView;
-        }
     }
 }

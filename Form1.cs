@@ -28,7 +28,7 @@ namespace TanksIndieGame
         private Camera camera;
 
         private GameControl gameControl;
-
+        private MainGameLoopThread mainGameLoop;
 
         public Form1()
         {
@@ -41,13 +41,13 @@ namespace TanksIndieGame
             {
                 return;
             }
-            renderer.SetViewProperties(SceneSettings.FOV, SceneSettings.NEAR, 
+            renderer.SetViewProperties(SceneSettings.FOV, SceneSettings.NEAR,
                 SceneSettings.FAR, glControl.Width, glControl.Height);
         }
 
         private void glControl_OpenGLInitialized(object sender, EventArgs e)
         {
-            
+
             gl = glControl.OpenGL;
             renderer = new Renderer(SceneSettings.FOV, SceneSettings.NEAR,
                 SceneSettings.FAR, glControl.Width, glControl.Height);
@@ -55,8 +55,8 @@ namespace TanksIndieGame
             camera = new Camera();
             gameControl = GameControl.Instance;
 
-            Model model = OBJLoader.LoadObjModel("shell", gl, loader, 
-                @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.obj", 
+            Model model = OBJLoader.LoadObjModel("shell", gl, loader,
+                @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.obj",
                 Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.png"),
                 Resource.vertexModelShader, Resource.fragmentModelShader, gameControl.Lights);
             Model modelClone = (Model)model.Clone();
@@ -74,12 +74,12 @@ namespace TanksIndieGame
             gameControl.RenderModels.Add(modelClone);
             gameControl.RenderModels.Add(tank);
 
-
+            mainGameLoop = new MainGameLoopThread(true, glControl);
         }
 
         private void glControl_OpenGLDraw(object sender, RenderEventArgs args)
         {
-            if(renderer == null || camera == null)
+            if (renderer == null || camera == null)
             {
                 return;
             }
@@ -147,7 +147,7 @@ namespace TanksIndieGame
 
             }
 
-            
+
 
 
         }
@@ -188,6 +188,8 @@ namespace TanksIndieGame
             }
 
         }
+
         #endregion
+
     }
 }

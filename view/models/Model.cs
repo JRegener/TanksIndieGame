@@ -1,9 +1,12 @@
 ﻿using GlmNet;
+using SharpGL;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TanksIndieGame.view.render;
 using TanksIndieGame.view.shaders;
 using TanksIndieGame.view.shaders.objects;
 
@@ -11,6 +14,10 @@ namespace TanksIndieGame.view.models
 {
     public class Model : ICloneable
     {
+        private OpenGL gl;
+
+        private Loader loader;
+
         private string tag;
 
         private BaseModel baseModel = null;
@@ -21,8 +28,11 @@ namespace TanksIndieGame.view.models
 
         private ModelCollision modelCollision = null;
 
-        public Model(string tag, BaseModel baseModel, ModelView modelView, BaseShader baseShader, ModelCollision modelCollision)
+        public Model(OpenGL gl, Loader loader, string tag, BaseModel baseModel, 
+            ModelView modelView, BaseShader baseShader, ModelCollision modelCollision)
         {
+            this.gl = gl;
+            this.loader = loader;
             this.tag = tag;
             this.baseModel = baseModel;
             this.modelView = modelView;
@@ -97,13 +107,11 @@ namespace TanksIndieGame.view.models
 
         public object Clone()
         {
-            Model model = (Model)this.MemberwiseClone();
-            model.Tag = String.Copy(this.tag);
-            model.BaseModel = (BaseModel)this.baseModel.Clone();
-            model.ModelView = (ModelView)this.modelView.Clone();
-            model.BaseShader = (ModelShader)(baseShader as ModelShader).Clone();
-            model.ModelCollision = (ModelCollision)this.modelCollision.Clone();
-
+            Model model = loader.LoadModel(String.Copy(this.tag), gl, 0, 0, 0, 0, 0, 0, 0.1f,
+                (float[])this.modelView.Vertices.Clone(), (uint[])this.modelView.Indices.Clone(), 
+                (float[])this.modelView.Uv.Clone(), (float[])this.modelView.Normals.Clone(),
+                (Image)this.modelView.Texture.Clone(), this.baseShader.VertexShaderCode, 
+                this.baseShader.FragmentShaderCode, this.baseShader.Lights);
             return model;
         }
     }

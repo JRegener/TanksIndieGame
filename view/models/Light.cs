@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TanksIndieGame.view.models
 {
-    public class Light : ICloneable
+    public class Light 
     {
         private vec3 position;
         private vec3 color;
@@ -44,12 +44,5 @@ namespace TanksIndieGame.view.models
             this.color = color;
         }
 
-        public object Clone()
-        {
-            Light light = (Light)this.MemberwiseClone();
-            light.Position = new vec3(this.position);
-            light.color = new vec3(this.color);
-            return light;
-        }
     }
 }

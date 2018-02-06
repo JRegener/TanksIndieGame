@@ -37,6 +37,12 @@ namespace TanksIndieGame.view.shaders
             set { fragmentShaderCode = value; }
         }
 
+        public Light Lights
+        {
+            get { return lights; }
+            set { lights = value; }
+        }
+
         public BaseShader(OpenGL gl, string vertexShaderCode, string fragmentShaderCode, Light lights)
         {
             this.vertexShaderCode = vertexShaderCode;

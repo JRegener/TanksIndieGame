@@ -8,7 +8,7 @@ using TanksIndieGame.view.models;
 
 namespace TanksIndieGame.view.shaders.objects
 {
-    public class ModelShader : BaseShader, ICloneable
+    public class ModelShader : BaseShader
     {
         public ModelShader(OpenGL gl, string vertexShaderCode, string fragmentShaderCode, Light lights)
             : base(gl, vertexShaderCode, fragmentShaderCode, lights)
@@ -22,16 +22,5 @@ namespace TanksIndieGame.view.shaders.objects
             LoadLight();
         }
 
-        public object Clone()
-        {
-            ModelShader modelShader = (ModelShader)this.MemberwiseClone();
-            modelShader.gl = gl;
-            modelShader.attributeLocation = new Dictionary<uint, string>();
-            modelShader.shaderProgram = new ShaderProgram();
-            modelShader.lights = (Light)this.lights.Clone();
-            modelShader.CreateShaders();
-            
-            return modelShader;
-        }
     }
 }
