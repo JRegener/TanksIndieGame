@@ -74,6 +74,7 @@
     </Compile>
     <Compile Include="logic\GameControl.cs" />
     <Compile Include="logic\MainGameLoopThread.cs" />
+    <Compile Include="logic\ObjectBehaviour.cs" />
     <Compile Include="logic\SceneSettings.cs" />
     <Compile Include="Resource.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -153,7 +153,7 @@ namespace TanksIndieGame.view.render
             BaseShader modelShader = LoadModelShader(gl, vertexShaderCode, fragmentShaderCode, lights);
             ModelCollision modelCollision = LoadModelCollision(0,0,0);
 
-            return new Model(gl,this, objectTag, baseModel, modelView, modelShader, modelCollision);
+            return new Model(gl, this, objectTag, baseModel, modelView, modelShader, modelCollision);
         }
 
         //public void FreeModel(OpenGL gl, Model model)

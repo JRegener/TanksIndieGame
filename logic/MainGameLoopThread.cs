@@ -17,7 +17,7 @@ namespace TanksIndieGame.logic
         private static int MAX_FRAME_SKIPS = 5;
         //период, который занимает кадр(последовательность обновление-рисование)
         private static int FRAME_PERIOD = 1000 / MAX_FPS;
-        private Stopwatch sw = null;
+        private Stopwatch stopwatch = null;
         private OpenGLControl glControl = null;
 
         private bool isRunning;
@@ -30,10 +30,11 @@ namespace TanksIndieGame.logic
         {
             this.isRunning = isRunning;
             this.glControl = glControl;
-            thread = new Thread(this.Run);
-            thread.IsBackground = true;
-            thread.Start();
-            sw = Stopwatch.StartNew();
+
+            this.thread = new Thread(this.Run);
+            this.thread.IsBackground = true;
+            this.thread.Start();
+            this.stopwatch = Stopwatch.StartNew();
         }
 
         private void Run()
@@ -50,14 +51,14 @@ namespace TanksIndieGame.logic
             {
                 try
                 {
-                    beginTime = sw.ElapsedMilliseconds;
+                    beginTime = stopwatch.ElapsedMilliseconds;
                     framesSkipped = 0;  // обнуляем счетчик пропущенных кадро
                                         // обновляем состояние игры
                     UpdateGame();
                     // формируем новый кадр
                     UpdateDisplay(); //Вызываем метод для рисования
-                                                   // вычисляем время, которое прошло с момента запуска цикла
-                    timeDiff = sw.ElapsedMilliseconds - beginTime;
+                                     // вычисляем время, которое прошло с момента запуска цикла
+                    timeDiff = stopwatch.ElapsedMilliseconds - beginTime;
                     // вычисляем время, которое можно спать
                     sleepTime = (int)(FRAME_PERIOD - timeDiff);
 
@@ -85,15 +86,7 @@ namespace TanksIndieGame.logic
                     }
 
                 }
-                finally
-                {
-                    // в случае ошибки, плоскость не перешла в 
-                    //требуемое состояние
-                    //if (canvas != null)
-                    //{
-                    //    surfaceHolder.unlockCanvasAndPost(canvas);
-                    //}
-                }   // end finally
+                finally { }
             }
         }
 
