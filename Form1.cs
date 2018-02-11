@@ -60,25 +60,34 @@ namespace TanksIndieGame
 
             mainGameLoop = new MainGameLoopThread(glControl);
 
-            Model model = OBJLoader.LoadObjModel("shell", gl, loader,
+            Model shell = OBJLoader.LoadObjModel("shell", gl, loader,
                 @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.obj",
                 Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.png"),
                 Resource.vertexModelShader, Resource.fragmentModelShader, gameControl.Lights);
-            Model modelClone = (Model)model.Clone();
-            modelClone.BaseObject.PosX = -10f;
 
             Model tank = OBJLoader.LoadObjModel("tank", gl, loader,
                 @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\tank.obj",
                 Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\tank.png"),
                 Resource.vertexModelShader, Resource.fragmentModelShader, gameControl.Lights);
 
-            tank.BaseObject.Scale = 0.1f;
             tank.BaseObject.PosX = 0f;
 
             player = new PlayerTankBehaviour(tank.BaseObject, tank.ModelCollision);
             tank.ObjectBehaviour = player;
-            gameControl.GameModels.Add(model);
-            gameControl.GameModels.Add(modelClone);
+
+            Model wall = OBJLoader.LoadObjModel("wall", gl, loader,
+                @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\wall.obj",
+                Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\wall.png"),
+                Resource.vertexModelShader, Resource.fragmentModelShader, gameControl.Lights);
+
+            wall.BaseObject.PosZ = 5f;
+
+            tank.BaseObject.Scale = 1f;
+            shell.BaseObject.Scale = 1f;
+            wall.BaseObject.Scale = 1f;
+
+            gameControl.GameModels.Add(wall);
+            gameControl.GameModels.Add(shell);
             gameControl.GameModels.Add(tank);
 
             mainGameLoop.Start();
