@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TanksIndieGame.logic;
 using TanksIndieGame.view.render;
 using TanksIndieGame.view.shaders;
 using TanksIndieGame.view.shaders.objects;
@@ -20,7 +21,9 @@ namespace TanksIndieGame.view.models
 
         private string tag;
 
-        private BaseModel baseModel = null;
+        private ObjectBehaviour objectBehaviour = null;
+
+        private BaseObject baseObject = null;
 
         private ModelView modelView = null;
 
@@ -28,13 +31,13 @@ namespace TanksIndieGame.view.models
 
         private ModelCollision modelCollision = null;
 
-        public Model(OpenGL gl, Loader loader, string tag, BaseModel baseModel, 
+        public Model(OpenGL gl, Loader loader, string tag, BaseObject baseObject, 
             ModelView modelView, BaseShader baseShader, ModelCollision modelCollision)
         {
             this.gl = gl;
             this.loader = loader;
             this.tag = tag;
-            this.baseModel = baseModel;
+            this.baseObject = baseObject;
             this.modelView = modelView;
             this.baseShader = baseShader;
             this.modelCollision = modelCollision;
@@ -52,16 +55,16 @@ namespace TanksIndieGame.view.models
             }
         }
 
-        public BaseModel BaseModel
+        public BaseObject BaseObject
         {
             get
             {
-                return baseModel;
+                return baseObject;
             }
 
             set
             {
-                baseModel = value;
+                baseObject = value;
             }
         }
 
@@ -104,6 +107,18 @@ namespace TanksIndieGame.view.models
             }
         }
 
+        public ObjectBehaviour ObjectBehaviour
+        {
+            get
+            {
+                return objectBehaviour;
+            }
+
+            set
+            {
+                objectBehaviour = value;
+            }
+        }
 
         public object Clone()
         {

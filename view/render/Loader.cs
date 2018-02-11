@@ -110,10 +110,10 @@ namespace TanksIndieGame.view.render
         }
 
 
-        private BaseModel LoadBaseModel(float posX, float posY, float posZ,
+        private BaseObject LoadBaseModel(float posX, float posY, float posZ,
             float rotX, float rotY, float rotZ, float scale)
         {
-            return new BaseModel(posX, posY, posZ, rotX, rotY, rotZ, scale);
+            return new BaseObject(posX, posY, posZ, rotX, rotY, rotZ, scale);
         }
 
         private ModelView LoadModelView(OpenGL gl, float[] vertices, uint[] indices, 
@@ -138,9 +138,9 @@ namespace TanksIndieGame.view.render
             return new ModelShader(gl, vertexShaderCode, fragmentShaderCode, lights);
         }
 
-        private ModelCollision LoadModelCollision(float length, float weight, float height)
+        private ModelCollision LoadModelCollision(float length, float weight)
         {
-            return new ModelCollision(length, weight, height);
+            return new ModelCollision(length, weight);
         }
 
         public Model LoadModel(string objectTag, OpenGL gl, float posX, float posY, float posZ,
@@ -148,10 +148,10 @@ namespace TanksIndieGame.view.render
             float[] vertices, uint[] indices, float[] uv, float[] normals, Image texture,
             string vertexShaderCode, string fragmentShaderCode, Light lights)
         {
-            BaseModel baseModel = LoadBaseModel(posX, posY, posZ, rotX, rotY, rotZ, scale);
+            BaseObject baseModel = LoadBaseModel(posX, posY, posZ, rotX, rotY, rotZ, scale);
             ModelView modelView = LoadModelView(gl, vertices, indices, uv, normals, texture);
             BaseShader modelShader = LoadModelShader(gl, vertexShaderCode, fragmentShaderCode, lights);
-            ModelCollision modelCollision = LoadModelCollision(0,0,0);
+            ModelCollision modelCollision = LoadModelCollision(0, 0);
 
             return new Model(gl, this, objectTag, baseModel, modelView, modelShader, modelCollision);
         }

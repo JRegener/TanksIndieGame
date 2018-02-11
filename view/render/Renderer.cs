@@ -76,9 +76,9 @@ namespace TanksIndieGame.view.render
             model.BaseShader.LoadVariables();
 
             mat4 transformationMatrix = GLMath.CreateTransformationMatrix(
-                model.BaseModel.Position,
-                model.BaseModel.Rotation,
-                model.BaseModel.Scale);
+                model.BaseObject.ViewPosition,
+                model.BaseObject.ViewRotation,
+                model.BaseObject.Scale);
 
             model.BaseShader.LoadTransformationMatrix(transformationMatrix);
 

@@ -7,15 +7,19 @@ using System.Threading.Tasks;
 
 namespace TanksIndieGame.view.models
 {
-    public class BaseModel 
+    public class BaseObject
     {
-        private float posX, posY, posZ;
+        protected float posX, posY, posZ;
 
-        private float rotX, rotY, rotZ;
+        protected float rotX, rotY, rotZ;
 
-        private float scale;
+        protected float scale;
 
-        public BaseModel(float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float scale)
+        private vec3 viewPosition;
+
+        private vec3 viewRotation;
+
+        public BaseObject(float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float scale)
         {
             this.posX = posX;
             this.posY = posY;
@@ -26,6 +30,9 @@ namespace TanksIndieGame.view.models
             this.rotZ = rotZ;
 
             this.scale = scale;
+
+            this.viewPosition = new vec3(posX, posY, posZ);
+            this.viewRotation = new vec3(rotX, rotY, rotZ);
         }
         #region properties
         public float PosX
@@ -122,12 +129,52 @@ namespace TanksIndieGame.view.models
         public vec3 Position
         {
             get { return new vec3(posX, posY, posZ); }
+            set
+            {
+                posX = value.x;
+                posY = value.y;
+                posZ = value.z;
+            }
         }
 
         public vec3 Rotation
         {
             get { return new vec3(rotX, rotY, rotZ); }
+            set
+            {
+                rotX = value.x;
+                rotY = value.y;
+                rotZ = value.z;
+            }
         }
+
+        public vec3 ViewPosition
+        {
+            get
+            {
+                return viewPosition;
+            }
+
+            set
+            {
+                viewPosition = value;
+            }
+        }
+
+        public vec3 ViewRotation
+        {
+            get
+            {
+                return viewRotation;
+            }
+
+            set
+            {
+                viewRotation = value;
+            }
+        }
+
+
         #endregion
 
 

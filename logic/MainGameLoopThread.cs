@@ -10,83 +10,58 @@ namespace TanksIndieGame.logic
 {
     public class MainGameLoopThread
     {
-        private Thread thread;
+
         //желательный fps
-        private static int MAX_FPS = 50;
+        private const int MAX_FPS = 50;
         //максимальное число кадров, которые можно пропустить
-        private static int MAX_FRAME_SKIPS = 5;
+        private const int MAX_FRAME_SKIPS = 5;
         //период, который занимает кадр(последовательность обновление-рисование)
-        private static int FRAME_PERIOD = 1000 / MAX_FPS;
+        private const int FRAME_PERIOD = 1000 / MAX_FPS;
+
+        private Thread thread;
+
+        private GameObjects gameControl = null;
         private Stopwatch stopwatch = null;
         private OpenGLControl glControl = null;
 
-        private bool isRunning;
-        public bool IsRunning
+        public MainGameLoopThread(OpenGLControl glControl)
         {
-            set { this.isRunning = value; }
-        }
-
-        public MainGameLoopThread(bool isRunning, OpenGLControl glControl)
-        {
-            this.isRunning = isRunning;
             this.glControl = glControl;
+            this.gameControl = GameObjects.Instance;
 
             this.thread = new Thread(this.Run);
             this.thread.IsBackground = true;
+        }
+
+        public void Start()
+        {
             this.thread.Start();
             this.stopwatch = Stopwatch.StartNew();
         }
 
         private void Run()
         {
+            long currentTime;     // время начала цикла
+            float interpolation = 0;
+            int loops;
+            currentTime = stopwatch.ElapsedMilliseconds;
 
-            long beginTime;     // время начала цикла
-            long timeDiff;      // время выполнения шага цикла
-            int sleepTime;      // сколько мс можно спать (<0 если выполнение опаздывает)
-            int framesSkipped;  // число кадров у которых не выполнялась операция вывода графики на экран
 
-            sleepTime = 0;
-
-            while (isRunning)
+            while (true)
             {
-                try
+                loops = 0;
+                while (stopwatch.ElapsedMilliseconds > currentTime && loops < MAX_FRAME_SKIPS)
                 {
-                    beginTime = stopwatch.ElapsedMilliseconds;
-                    framesSkipped = 0;  // обнуляем счетчик пропущенных кадро
-                                        // обновляем состояние игры
                     UpdateGame();
-                    // формируем новый кадр
-                    UpdateDisplay(); //Вызываем метод для рисования
-                                     // вычисляем время, которое прошло с момента запуска цикла
-                    timeDiff = stopwatch.ElapsedMilliseconds - beginTime;
-                    // вычисляем время, которое можно спать
-                    sleepTime = (int)(FRAME_PERIOD - timeDiff);
 
-                    if (sleepTime > 0)
-                    {
-                        // если sleepTime > 0 все хорошо, мы идем с опережением
-                        try
-                        {
-                            // отправляем поток в сон на период sleepTime
-                            // такой ход экономит к тому же заряд батареи
-                            Thread.Sleep(sleepTime);
-                        }
-                        catch (Exception e) { }
-                    }
-
-                    while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS)
-                    {
-                        // если sleepTime < 0 нам нужно обновлять игровую
-                        // ситуацию и не тратить время на вывод кадра
-                        UpdateGame();
-                        // добавляем смещение FRAME_PERIOD, чтобы иметь
-                        // время границы следующего кадра
-                        sleepTime += FRAME_PERIOD;
-                        framesSkipped++;
-                    }
-
+                    currentTime += FRAME_PERIOD;
+                    loops++;
                 }
-                finally { }
+
+                interpolation = (stopwatch.ElapsedMilliseconds + FRAME_PERIOD - currentTime)
+                                / (float)(FRAME_PERIOD);
+                UpdateDisplay(interpolation);
+
             }
         }
 
@@ -94,11 +69,26 @@ namespace TanksIndieGame.logic
         private void UpdateGame()
         {
 
+            // Update object logic
+            for (int i = 0; i < gameControl.GameModels.Count; i++)
+            {
+                if (gameControl.GameModels[i].ObjectBehaviour != null)
+                    gameControl.GameModels[i].ObjectBehaviour.FixedUpdate();
+            }
+
         }
 
-        private void UpdateDisplay()
+        private void UpdateDisplay(float interpolation)
         {
-            glControl.Invoke(new Action(() => { glControl.DoRender(); })); 
+            for (int i = 0; i < gameControl.GameModels.Count; i++)
+            {
+                if (gameControl.GameModels[i].ObjectBehaviour != null)
+                    gameControl.GameModels[i].ObjectBehaviour.Update(interpolation);
+            }
+
+            glControl.Invoke(new Action(() => { glControl.DoRender(); }));
         }
+
+
     }
 }

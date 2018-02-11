@@ -7,21 +7,21 @@ using TanksIndieGame.view.models;
 
 namespace TanksIndieGame.logic
 {
-    public sealed class GameControl
+    public sealed class GameObjects
     {
 
-        private static readonly Lazy<GameControl> instanceHolder =
-            new Lazy<GameControl>(() => new GameControl());
+        private static readonly Lazy<GameObjects> instanceHolder =
+            new Lazy<GameObjects>(() => new GameObjects());
 
-        private List<Model> renderModels = new List<Model>();
+        private List<Model> gameModels = new List<Model>();
         private Light lights = SceneSettings.BASE_LIGHT;
 
 
-        public List<Model> RenderModels
+        public List<Model> GameModels
         {
             get
             {
-                return renderModels;
+                return gameModels;
             }
 
         }
@@ -35,9 +35,9 @@ namespace TanksIndieGame.logic
 
         }
 
-        private GameControl() { }
+        private GameObjects() { }
 
-        public static GameControl Instance
+        public static GameObjects Instance
         {
             get { return instanceHolder.Value; }
         }

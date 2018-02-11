@@ -10,25 +10,31 @@ namespace TanksIndieGame.view.models
     {
         private float length; // Z
         private float weight; // X
-        private float height; // Y
 
+        private float halfLength;
+        private float halfWeight;
 
         public ModelCollision(ModelCollision modelCollision)
         {
             this.length = modelCollision.Length;
             this.weight = modelCollision.Weight;
-            this.height = modelCollision.Height;
+            this.halfLength = this.length / 2;
+            this.halfWeight = this.weight / 2;
         }
 
-        public ModelCollision(float length, float weight, float height)
+        public ModelCollision(float length, float weight)
         {
             this.length = length;
             this.weight = weight;
-            this.height = height;
+            this.halfLength = this.length / 2;
+            this.halfWeight = this.weight / 2;
         }
 
 
         #region properties
+        /// <summary>
+        /// Z axis
+        /// </summary>
         public float Length
         {
             get
@@ -42,6 +48,9 @@ namespace TanksIndieGame.view.models
             }
         }
 
+        /// <summary>
+        /// X Axis
+        /// </summary>
         public float Weight
         {
             get
@@ -55,18 +64,38 @@ namespace TanksIndieGame.view.models
             }
         }
 
-        public float Height
+        /// <summary>
+        /// Z axis
+        /// </summary>
+        public float HalfLength
         {
             get
             {
-                return height;
+                return halfLength;
             }
 
             set
             {
-                height = value;
+                halfLength = value;
             }
         }
+
+        /// <summary>
+        /// X Axis
+        /// </summary>
+        public float HalfWeight
+        {
+            get
+            {
+                return halfWeight;
+            }
+
+            set
+            {
+                halfWeight = value;
+            }
+        }
+
         #endregion
 
     }

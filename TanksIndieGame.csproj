@@ -72,16 +72,17 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="logic\GameControl.cs" />
+    <Compile Include="logic\GameObjects.cs" />
     <Compile Include="logic\MainGameLoopThread.cs" />
     <Compile Include="logic\ObjectBehaviour.cs" />
     <Compile Include="logic\SceneSettings.cs" />
+    <Compile Include="logic\scripts\PlayerTankBehaviour.cs" />
     <Compile Include="Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <Compile Include="view\models\BaseModel.cs" />
+    <Compile Include="view\models\BaseObject.cs" />
     <Compile Include="view\models\Camera.cs" />
     <Compile Include="view\models\Light.cs" />
     <Compile Include="view\models\Model.cs" />
@@ -120,9 +121,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="logic\scripts\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

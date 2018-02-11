@@ -9,7 +9,7 @@ using TanksIndieGame.view.models;
 
 namespace TanksIndieGame.view.shaders
 {
-    public abstract class BaseShader 
+    public abstract class BaseShader
     {
         public abstract void LoadVariables();
 
@@ -51,7 +51,7 @@ namespace TanksIndieGame.view.shaders
             this.lights = lights;
             CreateShaders();
         }
-        
+
         // Protected modifer use fo close methof from external impact,
         // but i can use it in copy method in ModelShader class
         protected void CreateShaders()

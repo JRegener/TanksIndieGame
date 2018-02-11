@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TanksIndieGame.logic;
+using TanksIndieGame.logic.scripts;
 using TanksIndieGame.view.models;
 using TanksIndieGame.view.render;
 using TanksIndieGame.view.tool;
@@ -27,8 +28,10 @@ namespace TanksIndieGame
         private Loader loader;
         private Camera camera;
 
-        private GameControl gameControl;
+        private GameObjects gameControl;
         private MainGameLoopThread mainGameLoop;
+
+        private PlayerTankBehaviour player;
 
         public Form1()
         {
@@ -53,28 +56,32 @@ namespace TanksIndieGame
                 SceneSettings.FAR, glControl.Width, glControl.Height);
             loader = new Loader();
             camera = new Camera();
-            gameControl = GameControl.Instance;
+            gameControl = GameObjects.Instance;
+
+            mainGameLoop = new MainGameLoopThread(glControl);
 
             Model model = OBJLoader.LoadObjModel("shell", gl, loader,
                 @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.obj",
                 Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.png"),
                 Resource.vertexModelShader, Resource.fragmentModelShader, gameControl.Lights);
             Model modelClone = (Model)model.Clone();
-            modelClone.BaseModel.PosX = -5f;
+            modelClone.BaseObject.PosX = -10f;
 
             Model tank = OBJLoader.LoadObjModel("tank", gl, loader,
                 @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\tank.obj",
                 Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\tank.png"),
                 Resource.vertexModelShader, Resource.fragmentModelShader, gameControl.Lights);
 
-            tank.BaseModel.Scale = 0.1f;
-            tank.BaseModel.PosX = 5f;
+            tank.BaseObject.Scale = 0.1f;
+            tank.BaseObject.PosX = 0f;
 
-            gameControl.RenderModels.Add(model);
-            gameControl.RenderModels.Add(modelClone);
-            gameControl.RenderModels.Add(tank);
+            player = new PlayerTankBehaviour(tank.BaseObject, tank.ModelCollision);
+            tank.ObjectBehaviour = player;
+            gameControl.GameModels.Add(model);
+            gameControl.GameModels.Add(modelClone);
+            gameControl.GameModels.Add(tank);
 
-            mainGameLoop = new MainGameLoopThread(true, glControl);
+            mainGameLoop.Start();
         }
 
         private void glControl_OpenGLDraw(object sender, RenderEventArgs args)
@@ -84,7 +91,7 @@ namespace TanksIndieGame
                 return;
             }
             renderer.Prepare(gl);
-            renderer.Render(gl, gameControl.RenderModels, camera);
+            renderer.Render(gl, gameControl.GameModels, camera);
 
             lblInfo.Text = camera.GetInfo();
         }
@@ -96,7 +103,13 @@ namespace TanksIndieGame
             {
                 isMouseDown = true;
                 oldPosition = e.Location;
+                player.Move(false);
             }
+            if (e.Button == MouseButtons.Left)
+            {
+                player.Move(true);
+            }
+
         }
 
         private void glControl_MouseUp(object sender, MouseEventArgs e)
@@ -105,7 +118,6 @@ namespace TanksIndieGame
             {
                 isMouseDown = false;
             }
-
         }
 
         private void glControl_MouseMove(object sender, MouseEventArgs e)
