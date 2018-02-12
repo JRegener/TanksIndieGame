@@ -116,6 +116,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Content Include="Resources\fragmentModelShader.txt" />
+    <Content Include="Resources\map.txt" />
     <Content Include="Resources\vertexModelShader.txt" />
   </ItemGroup>
   <ItemGroup>

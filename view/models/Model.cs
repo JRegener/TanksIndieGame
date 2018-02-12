@@ -122,7 +122,7 @@ namespace TanksIndieGame.view.models
 
         public object Clone()
         {
-            Model model = loader.LoadModel(String.Copy(this.tag), gl, 0, 0, 0, 0, 0, 0, 0.1f,
+            Model model = loader.LoadModel(String.Copy(this.tag), gl, 0, 0, 0, 0, 0, 0, 1f,
                 (float[])this.modelView.Vertices.Clone(), (uint[])this.modelView.Indices.Clone(), 
                 (float[])this.modelView.Uv.Clone(), (float[])this.modelView.Normals.Clone(),
                 (Image)this.modelView.Texture.Clone(), this.baseShader.VertexShaderCode, 

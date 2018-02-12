@@ -8,6 +8,7 @@ using TanksIndieGame.view.models;
 
 namespace TanksIndieGame.logic
 {
+
     public static class SceneSettings
     {
         // Render
@@ -19,5 +20,8 @@ namespace TanksIndieGame.logic
 
         // Light
         public static readonly Light BASE_LIGHT = new Light(new vec3(0, 1000, 0), new vec3(1, 1, 1));
+
+        // Map
+
     }
 }

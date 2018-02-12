@@ -20,14 +20,14 @@ namespace TanksIndieGame.logic
 
         private Thread thread;
 
-        private GameObjects gameControl = null;
+        private GameObjects gameObjects = null;
         private Stopwatch stopwatch = null;
         private OpenGLControl glControl = null;
 
         public MainGameLoopThread(OpenGLControl glControl)
         {
             this.glControl = glControl;
-            this.gameControl = GameObjects.Instance;
+            this.gameObjects = GameObjects.Instance;
 
             this.thread = new Thread(this.Run);
             this.thread.IsBackground = true;
@@ -70,20 +70,20 @@ namespace TanksIndieGame.logic
         {
 
             // Update object logic
-            for (int i = 0; i < gameControl.GameModels.Count; i++)
+            for (int i = 0; i < gameObjects.GameModels.Count; i++)
             {
-                if (gameControl.GameModels[i].ObjectBehaviour != null)
-                    gameControl.GameModels[i].ObjectBehaviour.FixedUpdate();
+                if (gameObjects.GameModels[i].ObjectBehaviour != null)
+                    gameObjects.GameModels[i].ObjectBehaviour.FixedUpdate();
             }
 
         }
 
         private void UpdateDisplay(float interpolation)
         {
-            for (int i = 0; i < gameControl.GameModels.Count; i++)
+            for (int i = 0; i < gameObjects.GameModels.Count; i++)
             {
-                if (gameControl.GameModels[i].ObjectBehaviour != null)
-                    gameControl.GameModels[i].ObjectBehaviour.Update(interpolation);
+                if (gameObjects.GameModels[i].ObjectBehaviour != null)
+                    gameObjects.GameModels[i].ObjectBehaviour.Update(interpolation);
             }
 
             glControl.Invoke(new Action(() => { glControl.DoRender(); }));

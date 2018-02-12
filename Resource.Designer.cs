@@ -91,6 +91,27 @@ namespace TanksIndieGame {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 0000000000000
+        ///0010000000000
+        ///0010300111101
+        ///0010000000000
+        ///0000000000000
+        ///0001111111000
+        ///1000000100000
+        ///0000000000000
+        ///0011100000100
+        ///0010000001000
+        ///0010002010000
+        ///0000000000000
+        ///0000000000000.
+        /// </summary>
+        public static string map {
+            get {
+                return ResourceManager.GetString("map", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to #version 420 core
         ///
         ///in vec3 position;

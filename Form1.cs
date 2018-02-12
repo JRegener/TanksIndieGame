@@ -28,7 +28,7 @@ namespace TanksIndieGame
         private Loader loader;
         private Camera camera;
 
-        private GameObjects gameControl;
+        private GameObjects gameObjects;
         private MainGameLoopThread mainGameLoop;
 
         private PlayerTankBehaviour player;
@@ -56,39 +56,45 @@ namespace TanksIndieGame
                 SceneSettings.FAR, glControl.Width, glControl.Height);
             loader = new Loader();
             camera = new Camera();
-            gameControl = GameObjects.Instance;
+            gameObjects = GameObjects.Instance;
 
             mainGameLoop = new MainGameLoopThread(glControl);
 
             Model shell = OBJLoader.LoadObjModel("shell", gl, loader,
                 @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.obj",
                 Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.png"),
-                Resource.vertexModelShader, Resource.fragmentModelShader, gameControl.Lights);
+                Resource.vertexModelShader, Resource.fragmentModelShader, gameObjects.Lights);
 
             Model tank = OBJLoader.LoadObjModel("tank", gl, loader,
                 @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\tank.obj",
                 Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\tank.png"),
-                Resource.vertexModelShader, Resource.fragmentModelShader, gameControl.Lights);
+                Resource.vertexModelShader, Resource.fragmentModelShader, gameObjects.Lights);
 
-            tank.BaseObject.PosX = 0f;
+            //tank.BaseObject.PosX = 0f;
 
-            player = new PlayerTankBehaviour(tank.BaseObject, tank.ModelCollision);
-            tank.ObjectBehaviour = player;
+            //player = new PlayerTankBehaviour(tank);
+            //tank.ObjectBehaviour = player;
 
             Model wall = OBJLoader.LoadObjModel("wall", gl, loader,
                 @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\wall.obj",
                 Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\wall.png"),
-                Resource.vertexModelShader, Resource.fragmentModelShader, gameControl.Lights);
+                Resource.vertexModelShader, Resource.fragmentModelShader, gameObjects.Lights);
 
-            wall.BaseObject.PosZ = 5f;
+            //tank.BaseObject.Scale = 1f;
+            //shell.BaseObject.Scale = 1f;
+            //wall.BaseObject.Scale = 1f;
 
-            tank.BaseObject.Scale = 1f;
-            shell.BaseObject.Scale = 1f;
-            wall.BaseObject.Scale = 1f;
+            gameObjects.DefaultWall = wall;
+            gameObjects.DefaultShell = shell;
+            gameObjects.DefaultPlayerTank = tank;
+            gameObjects.LoadMap(Resource.map);
+            //wall.BaseObject.PosZ = 5f;
 
-            gameControl.GameModels.Add(wall);
-            gameControl.GameModels.Add(shell);
-            gameControl.GameModels.Add(tank);
+
+
+            //gameObjects.GameModels.Add(wall);
+            //gameObjects.GameModels.Add(shell);
+            //gameObjects.GameModels.Add(tank);
 
             mainGameLoop.Start();
         }
@@ -100,7 +106,7 @@ namespace TanksIndieGame
                 return;
             }
             renderer.Prepare(gl);
-            renderer.Render(gl, gameControl.GameModels, camera);
+            renderer.Render(gl, gameObjects.GameModels, camera);
 
             lblInfo.Text = camera.GetInfo();
         }
@@ -112,11 +118,11 @@ namespace TanksIndieGame
             {
                 isMouseDown = true;
                 oldPosition = e.Location;
-                player.Move(false);
+                //player.Move(false);
             }
             if (e.Button == MouseButtons.Left)
             {
-                player.Move(true);
+                //player.Move(true);
             }
 
         }

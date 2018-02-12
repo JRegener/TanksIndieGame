@@ -9,40 +9,18 @@ namespace TanksIndieGame.logic
 {
     public class ObjectBehaviour
     {
-        protected BaseObject baseObject;
-        protected ModelCollision modelCollision;
+        protected Model parentModel;
 
-        public ObjectBehaviour(BaseObject baseObject, ModelCollision modelCollision)
+        public ObjectBehaviour(Model parentModel)
         {
-            this.baseObject = baseObject;
-            this.modelCollision = modelCollision;
+            this.parentModel = parentModel;
         }
 
         #region properties
-        public BaseObject BaseObject
+        public Model ParentModel
         {
-            get
-            {
-                return baseObject;
-            }
-
-            set
-            {
-                baseObject = value;
-            }
-        }
-
-        public ModelCollision ModelCollision
-        {
-            get
-            {
-                return modelCollision;
-            }
-
-            set
-            {
-                modelCollision = value;
-            }
+            get { return this.parentModel; }
+            set { this.parentModel = value; }
         }
         #endregion
 

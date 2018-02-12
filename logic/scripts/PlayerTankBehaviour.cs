@@ -15,16 +15,19 @@ namespace TanksIndieGame.logic.scripts
 
         private bool isMove = false;
 
-        public PlayerTankBehaviour(BaseObject baseObject, ModelCollision modelCollision)
-            : base(baseObject, modelCollision)
-        { }
+        public PlayerTankBehaviour(Model parentModel) : base(parentModel)
+        {}
 
         public override void FixedUpdate()
         {
             if (isMove)
             {
-                Console.WriteLine("before update tank position x = {0} y = {1} z = {2}", baseObject.Position.x, baseObject.Position.y, baseObject.Position.z);
-                baseObject.Position += velocity * direction;
+                Console.WriteLine("before update tank position x = {0} y = {1} z = {2}",
+                    parentModel.BaseObject.Position.x, 
+                    parentModel.BaseObject.Position.y, 
+                    parentModel.BaseObject.Position.z);
+
+                parentModel.BaseObject.Position += velocity * direction;
 
             }
         }
@@ -33,7 +36,7 @@ namespace TanksIndieGame.logic.scripts
         {
             if (isMove)
             {
-                baseObject.ViewPosition = baseObject.Position + velocity * direction * interpolation;
+                parentModel.BaseObject.ViewPosition = parentModel.BaseObject.Position + velocity * direction * interpolation;
             }
         }
 

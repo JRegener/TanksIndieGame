@@ -86,7 +86,7 @@ namespace TanksIndieGame.view.tool
                     texturesArray, normalsArray);
             uint[] indicesArray = convertIndicesListToArray(indices);
 
-            return loader.LoadModel(objectTag, gl, 0, 0, 0, 0, 0, 0, 0.1f, verticesArray, indicesArray, texturesArray,
+            return loader.LoadModel(objectTag, gl, 0, 0, 0, 0, 0, 0, 1f, verticesArray, indicesArray, texturesArray,
                 normalsArray, textureImg, vertexShaderCode, fragmentShaderCode, lights);
         }
 

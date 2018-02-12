@@ -134,6 +134,8 @@ namespace TanksIndieGame.view.models
                 posX = value.x;
                 posY = value.y;
                 posZ = value.z;
+
+                viewPosition = value;
             }
         }
 
@@ -145,6 +147,8 @@ namespace TanksIndieGame.view.models
                 rotX = value.x;
                 rotY = value.y;
                 rotZ = value.z;
+
+                viewRotation = value;
             }
         }
 
