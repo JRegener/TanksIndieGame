@@ -33,6 +33,8 @@ namespace TanksIndieGame
 
         private PlayerTankBehaviour player;
 
+        Model shell;
+
         public Form1()
         {
             InitializeComponent();
@@ -60,7 +62,7 @@ namespace TanksIndieGame
 
             mainGameLoop = new MainGameLoopThread(glControl);
 
-            Model shell = OBJLoader.LoadObjModel("shell", gl, loader,
+            shell = OBJLoader.LoadObjModel("shell", gl, loader,
                 @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.obj",
                 Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.png"),
                 Resource.vertexModelShader, Resource.fragmentModelShader, gameObjects.Lights);
@@ -84,13 +86,16 @@ namespace TanksIndieGame
             //shell.BaseObject.Scale = 1f;
             //wall.BaseObject.Scale = 1f;
 
+            player = new PlayerTankBehaviour(tank);
+            tank.ObjectBehaviour = player;
+
             gameObjects.DefaultWall = wall;
             gameObjects.DefaultShell = shell;
-            gameObjects.DefaultPlayerTank = tank;
+            gameObjects.PlayerTank = tank;
             gameObjects.LoadMap(Resource.map);
             //wall.BaseObject.PosZ = 5f;
 
-
+            shell.BaseObject.Rotation = new vec3(0, 3.14f, 0);
 
             //gameObjects.GameModels.Add(wall);
             //gameObjects.GameModels.Add(shell);
@@ -122,7 +127,7 @@ namespace TanksIndieGame
             }
             if (e.Button == MouseButtons.Left)
             {
-                //player.Move(true);
+                player.Fire();
             }
 
         }

@@ -45,6 +45,7 @@ namespace TanksIndieGame.view.models
             set
             {
                 posX = value;
+
             }
         }
 
@@ -58,6 +59,7 @@ namespace TanksIndieGame.view.models
             set
             {
                 posY = value;
+
             }
         }
 
@@ -71,6 +73,7 @@ namespace TanksIndieGame.view.models
             set
             {
                 posZ = value;
+
             }
         }
 

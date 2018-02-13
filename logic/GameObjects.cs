@@ -22,11 +22,20 @@ namespace TanksIndieGame.logic
         private static readonly Lazy<GameObjects> instanceHolder =
             new Lazy<GameObjects>(() => new GameObjects());
 
+        public static GameObjects Instance
+        {
+            get { return instanceHolder.Value; }
+        }
+
+        public readonly vec3 ShellShiftPosition = new vec3(-4.7f, 3.22f, -0.06f);
+
+
         private List<Model> gameModels = new List<Model>();
         private Light lights = SceneSettings.BASE_LIGHT;
 
+
         private Model defaultWall = null;
-        private Model defaultPlayerTank = null;
+        private Model playerTank = null;
         private Model defaultShell = null;
         private Model defaultBotTank = null;
 
@@ -48,12 +57,6 @@ namespace TanksIndieGame.logic
 
         }
 
-
-        public static GameObjects Instance
-        {
-            get { return instanceHolder.Value; }
-        }
-
         public Model DefaultWall
         {
             get
@@ -67,16 +70,16 @@ namespace TanksIndieGame.logic
             }
         }
 
-        public Model DefaultPlayerTank
+        public Model PlayerTank
         {
             get
             {
-                return defaultPlayerTank;
+                return playerTank;
             }
 
             set
             {
-                defaultPlayerTank = value;
+                playerTank = value;
             }
         }
 
@@ -105,7 +108,6 @@ namespace TanksIndieGame.logic
                 defaultBotTank = value;
             }
         }
-
 
         private GameObjects() { }
 
@@ -136,11 +138,10 @@ namespace TanksIndieGame.logic
                     }
                     else if (lines[i][j].Equals((char)GameModel.Player))
                     {
-                        if (defaultPlayerTank != null)
+                        if (playerTank != null)
                         {
-                            Model newPlayerTank = (Model)defaultPlayerTank.Clone();
-                            newPlayerTank.BaseObject.Position = new vec3(x, 0, z);
-                            gameModels.Add(newPlayerTank);
+                            playerTank.BaseObject.Position = new vec3(x, 0, z);
+                            gameModels.Add(playerTank);
                         }
                     }
                     else if (lines[i][j].Equals((char)GameModel.Bot))

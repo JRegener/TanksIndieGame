@@ -83,5 +83,10 @@ namespace TanksIndieGame.view.tool
         {
             return glm.normalize(v1 + v2);
         }
+
+        public static vec3 GetDirection(float radianAngle)
+        {
+            return new vec3(glm.cos(radianAngle), 0, glm.sin(radianAngle));
+        }
     }
 }
