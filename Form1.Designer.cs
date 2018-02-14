@@ -31,8 +31,10 @@ namespace TanksIndieGame
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.glControl = new SharpGL.OpenGLControl();
             this.lblInfo = new System.Windows.Forms.Label();
+            this.gameLoopTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.glControl)).BeginInit();
             this.SuspendLayout();
             // 
@@ -67,6 +69,11 @@ namespace TanksIndieGame
             this.lblInfo.TabIndex = 1;
             this.lblInfo.Text = "info";
             // 
+            // gameLoopTimer
+            // 
+            this.gameLoopTimer.Interval = 1;
+            this.gameLoopTimer.Tick += new System.EventHandler(this.gameLoopTimer_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -87,6 +94,7 @@ namespace TanksIndieGame
 
         private SharpGL.OpenGLControl glControl;
         private System.Windows.Forms.Label lblInfo;
+        private System.Windows.Forms.Timer gameLoopTimer;
     }
 }
 

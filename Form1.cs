@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,17 @@ namespace TanksIndieGame
 {
     public partial class Form1 : Form
     {
+        //желательный fps
+        private const int MAX_FPS = 50;
+        //максимальное число кадров, которые можно пропустить
+        private const int MAX_FRAME_SKIPS = 5;
+        //период, который занимает кадр(последовательность обновление-рисование)
+        private const int FRAME_PERIOD = 1000 / MAX_FPS;
+
+        private long currentTime;     // время начала цикла
+        private float interpolation = 0;
+        private int loops;
+
         private bool isMouseDown;
         private Point oldPosition;
 
@@ -29,9 +41,9 @@ namespace TanksIndieGame
         private Camera camera;
 
         private GameObjects gameObjects;
-        private MainGameLoopThread mainGameLoop;
-
         private PlayerTankBehaviour player;
+
+        private Stopwatch stopwatch = null;
 
         Model shell;
 
@@ -60,7 +72,8 @@ namespace TanksIndieGame
             camera = new Camera();
             gameObjects = GameObjects.Instance;
 
-            mainGameLoop = new MainGameLoopThread(glControl);
+            stopwatch = Stopwatch.StartNew();
+            currentTime = stopwatch.ElapsedMilliseconds;
 
             shell = OBJLoader.LoadObjModel("shell", gl, loader,
                 @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.obj",
@@ -101,7 +114,7 @@ namespace TanksIndieGame
             //gameObjects.GameModels.Add(shell);
             //gameObjects.GameModels.Add(tank);
 
-            mainGameLoop.Start();
+            gameLoopTimer.Start();
         }
 
         private void glControl_OpenGLDraw(object sender, RenderEventArgs args)
@@ -223,5 +236,43 @@ namespace TanksIndieGame
 
         #endregion
 
+        private void gameLoopTimer_Tick(object sender, EventArgs e)
+        {
+            loops = 0;
+            while (stopwatch.ElapsedMilliseconds > currentTime && loops < MAX_FRAME_SKIPS)
+            {
+                UpdateGame();
+
+                currentTime += FRAME_PERIOD;
+                loops++;
+                Console.WriteLine(stopwatch.ElapsedMilliseconds.ToString());
+            }
+
+            interpolation = (stopwatch.ElapsedMilliseconds + FRAME_PERIOD - currentTime)
+                            / (float)(FRAME_PERIOD);
+            UpdateDisplay(interpolation);
+        }
+
+        private void UpdateGame()
+        {
+            // Update object logic
+            for (int i = 0; i < gameObjects.GameModels.Count; i++)
+            {
+                if (gameObjects.GameModels[i].ObjectBehaviour != null)
+                    gameObjects.GameModels[i].ObjectBehaviour.FixedUpdate();
+            }
+
+        }
+
+        private void UpdateDisplay(float interpolation)
+        {
+            for (int i = 0; i < gameObjects.GameModels.Count; i++)
+            {
+                if (gameObjects.GameModels[i].ObjectBehaviour != null)
+                    gameObjects.GameModels[i].ObjectBehaviour.Update(interpolation);
+            }
+
+            glControl.DoRender();
+        }
     }
 }
