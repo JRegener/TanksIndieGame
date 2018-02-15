@@ -32,6 +32,7 @@ namespace TanksIndieGame
         private float interpolation = 0;
         private int loops;
 
+        private MousePicker mousePicker;
         private bool isMouseDown;
         private Point oldPosition;
 
@@ -71,6 +72,7 @@ namespace TanksIndieGame
             loader = new Loader();
             camera = new Camera();
             gameObjects = GameObjects.Instance;
+            mousePicker = new MousePicker(camera, renderer.ProjectionMatrix);
 
             stopwatch = Stopwatch.StartNew();
             currentTime = stopwatch.ElapsedMilliseconds;
@@ -155,6 +157,8 @@ namespace TanksIndieGame
 
         private void glControl_MouseMove(object sender, MouseEventArgs e)
         {
+            mousePicker.Update(e.X, e.Y, glControl.Width, glControl.Height);
+
             if (e.Button == MouseButtons.Right)
             {
                 if (!isMouseDown)
@@ -245,7 +249,6 @@ namespace TanksIndieGame
 
                 currentTime += FRAME_PERIOD;
                 loops++;
-                Console.WriteLine(stopwatch.ElapsedMilliseconds.ToString());
             }
 
             interpolation = (stopwatch.ElapsedMilliseconds + FRAME_PERIOD - currentTime)

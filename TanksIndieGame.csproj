@@ -83,6 +83,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="view\entities\GroundControl.cs" />
     <Compile Include="view\models\BaseObject.cs" />
     <Compile Include="view\models\Camera.cs" />
     <Compile Include="view\models\Light.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="view\tool\GLMath.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="view\tool\MousePicker.cs" />
     <Compile Include="view\tool\OBJLoader.cs" />
     <Compile Include="view\tool\Vertex.cs" />
     <EmbeddedResource Include="Form1.resx">
