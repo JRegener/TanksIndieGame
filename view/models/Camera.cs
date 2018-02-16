@@ -13,11 +13,11 @@ namespace TanksIndieGame.view.models
         private vec3 position = new vec3(0, 0, 0);
         private float pitch = 45f;
         private float yaw = -45f;
-        private float distance = 250f;
+        private float distance = 150f;
         private float projectionDistance;
         private float angelAround = 45f;
 
-        private float step = 0.2f;
+        private float step = 1f;
 
 
         public vec3 Direction

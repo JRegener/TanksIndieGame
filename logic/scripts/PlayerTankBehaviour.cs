@@ -13,10 +13,10 @@ namespace TanksIndieGame.logic.scripts
     {
         private GameObjects gameObjects = GameObjects.Instance;
 
-        private float velocity = 0.1f;
-        private vec3 direction = new vec3(-1, 0, 0);
-
-        //private vec3 localShallStartPosition = new vec3()
+        private float velocity = 0.7f;
+        private vec3 moveDirection = new vec3(-1, 0, 0);
+        private float rotationAngle = 0;
+        private float shiftAngle = (float)Math.PI;
 
         private bool isMove = false;
 
@@ -32,7 +32,7 @@ namespace TanksIndieGame.logic.scripts
                     parentModel.BaseObject.Position.y,
                     parentModel.BaseObject.Position.z);
 
-                parentModel.BaseObject.Position += velocity * direction;
+                parentModel.BaseObject.Position += velocity * moveDirection;
 
             }
         }
@@ -42,7 +42,7 @@ namespace TanksIndieGame.logic.scripts
             if (isMove)
             {
                 parentModel.BaseObject.ViewPosition = parentModel.BaseObject.Position
-                    + velocity * direction * interpolation;
+                    + velocity * moveDirection * interpolation;
             }
         }
 
@@ -54,10 +54,36 @@ namespace TanksIndieGame.logic.scripts
         public void Fire()
         {
             Model newShell = (Model)gameObjects.DefaultShell.Clone();
-            newShell.BaseObject.Position = parentModel.BaseObject.Position + gameObjects.ShellShiftPosition;
-            newShell.BaseObject.Rotation = GLMath.GetDirection(startRotationAngle);
-            newShell.ObjectBehaviour = new ShellBehaviour(newShell);
+            newShell.BaseObject.Position = parentModel.BaseObject.Position + GLMath.RotateVector(rotationAngle, gameObjects.ShellShiftPosition);
+            newShell.BaseObject.Rotation = new vec3(0, rotationAngle + (float)Math.PI, 0);
+            ShellBehaviour shellBehaviour = new ShellBehaviour(newShell);
+            shellBehaviour.MoveDirection = new vec3(moveDirection);
+            newShell.ObjectBehaviour = shellBehaviour;
+
             gameObjects.GameModels.Add(newShell);
+        }
+
+        public void SetViewDirection(vec3 mouseCoord)
+        {
+            vec3 startDirection = new vec3(1, 0, 0);
+            moveDirection = mouseCoord - parentModel.BaseObject.Position;
+            moveDirection = glm.normalize(moveDirection);
+
+            vec3 scalarProduct = startDirection * moveDirection;
+            float cos = scalarProduct.x + scalarProduct.y + scalarProduct.z / 
+                GLMath.GetLength(startDirection) * GLMath.GetLength(moveDirection);
+
+            if (moveDirection.z > 0)
+            {
+                rotationAngle = glm.acos(cos) + shiftAngle;
+            }
+            else
+            {
+                rotationAngle = 2 * (float)Math.PI - glm.acos(cos) + shiftAngle;
+            }
+
+            rotationAngle = 2 * (float)Math.PI - rotationAngle;
+            parentModel.BaseObject.Rotation = new vec3(0, rotationAngle, 0);
         }
     }
 }

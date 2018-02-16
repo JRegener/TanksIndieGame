@@ -158,7 +158,7 @@ namespace TanksIndieGame
         private void glControl_MouseMove(object sender, MouseEventArgs e)
         {
             mousePicker.Update(e.X, e.Y, glControl.Width, glControl.Height);
-
+            player.SetViewDirection(mousePicker.CurGroundPoint);
             if (e.Button == MouseButtons.Right)
             {
                 if (!isMouseDown)
@@ -221,6 +221,13 @@ namespace TanksIndieGame
             if (e.KeyCode == Keys.D)
             {
                 camera.MoveRight();
+            }
+
+
+
+            if(e.KeyCode == Keys.X)
+            {
+                player.Move(true);
             }
 
         }

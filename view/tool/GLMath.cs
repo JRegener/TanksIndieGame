@@ -88,5 +88,49 @@ namespace TanksIndieGame.view.tool
         {
             return new vec3(glm.cos(radianAngle), 0, glm.sin(radianAngle));
         }
+
+        public static float GetLength(vec3 v)
+        {
+            return v.x * v.x + v.y * v.y + v.z * v.z;
+        }
+
+        public static vec3 RotateVector(float angle, vec3 v)
+        {
+
+            mat4 matrix = glm.rotate(angle, new vec3(0, 1, 0));
+            //WriteMatrix(matrix);
+            vec4 vector = new vec4(v, 1);
+            mat4 rotMatr = mat4.identity();
+            rotMatr[0] = vector;
+
+            vector = matrix * vector;
+            //WriteVector(vector);
+            return new vec3(vector);
+
+        }
+
+        private static void WriteMatrix(mat4 m)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    Console.Write(" {0:0.00} ", m[i, j]);
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine("/////////////");
+        }
+
+        private static void WriteVector(vec4 m)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                    Console.Write(" {0:0.00} ", m[i]);
+                
+            }
+            Console.WriteLine();
+            Console.WriteLine("/////////////");
+        }
     }
 }

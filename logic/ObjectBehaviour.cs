@@ -11,12 +11,9 @@ namespace TanksIndieGame.logic
     {
         protected Model parentModel;
 
-        protected float startRotationAngle;
-
         public ObjectBehaviour(Model parentModel)
         {
             this.parentModel = parentModel;
-            this.startRotationAngle = this.parentModel.BaseObject.RotY;
         }
 
         #region properties
