@@ -9,11 +9,11 @@ namespace TanksIndieGame.view.models
 {
     public class BaseObject
     {
-        protected float posX, posY, posZ;
+        private float posX, posY, posZ;
 
-        protected float rotX, rotY, rotZ;
+        private float rotX, rotY, rotZ;
 
-        protected float scale;
+        private float scale;
 
         private vec3 viewPosition;
 
@@ -180,7 +180,6 @@ namespace TanksIndieGame.view.models
                 viewRotation = value;
             }
         }
-
 
         #endregion
 

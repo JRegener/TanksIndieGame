@@ -86,6 +86,8 @@
     <Compile Include="view\entities\GroundControl.cs" />
     <Compile Include="view\models\BaseObject.cs" />
     <Compile Include="view\models\Camera.cs" />
+    <Compile Include="view\models\CollisionData.cs" />
+    <Compile Include="view\models\CollisionObjects.cs" />
     <Compile Include="view\models\Light.cs" />
     <Compile Include="view\models\Model.cs" />
     <Compile Include="view\models\ModelCollision.cs" />

@@ -27,13 +27,7 @@ namespace TanksIndieGame.logic.scripts
         {
             if (isMove)
             {
-                Console.WriteLine("before update tank position x = {0} y = {1} z = {2}",
-                    parentModel.BaseObject.Position.x,
-                    parentModel.BaseObject.Position.y,
-                    parentModel.BaseObject.Position.z);
-
                 parentModel.BaseObject.Position += velocity * moveDirection;
-
             }
         }
 

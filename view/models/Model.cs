@@ -21,6 +21,8 @@ namespace TanksIndieGame.view.models
 
         private string tag;
 
+        private CollisionObjects collisionObjects = null;
+
         private ObjectBehaviour objectBehaviour = null;
 
         private BaseObject baseObject = null;
@@ -41,6 +43,7 @@ namespace TanksIndieGame.view.models
             this.modelView = modelView;
             this.baseShader = baseShader;
             this.modelCollision = modelCollision;
+            this.collisionObjects = new CollisionObjects();
         }
 
         public string Tag
@@ -120,13 +123,26 @@ namespace TanksIndieGame.view.models
             }
         }
 
+        public CollisionObjects CollisionObjects
+        {
+            get
+            {
+                return collisionObjects;
+            }
+
+            set
+            {
+                collisionObjects = value;
+            }
+        }
+
         public object Clone()
         {
             Model model = loader.LoadModel(String.Copy(this.tag), gl, 0, 0, 0, 0, 0, 0, 1f,
                 (float[])this.modelView.Vertices.Clone(), (uint[])this.modelView.Indices.Clone(), 
                 (float[])this.modelView.Uv.Clone(), (float[])this.modelView.Normals.Clone(),
-                (Image)this.modelView.Texture.Clone(), this.baseShader.VertexShaderCode, 
-                this.baseShader.FragmentShaderCode, this.baseShader.Lights);
+                (Image)this.modelView.Texture.Clone(), this.ModelCollision.Weight, this.ModelCollision.Length, 
+                this.baseShader.VertexShaderCode, this.baseShader.FragmentShaderCode, this.baseShader.Lights);
             return model;
         }
     }

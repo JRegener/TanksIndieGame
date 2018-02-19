@@ -110,8 +110,6 @@ namespace TanksIndieGame
             gameObjects.LoadMap(Resource.map);
             //wall.BaseObject.PosZ = 5f;
 
-            shell.BaseObject.Rotation = new vec3(0, 3.14f, 0);
-
             //gameObjects.GameModels.Add(wall);
             //gameObjects.GameModels.Add(shell);
             //gameObjects.GameModels.Add(tank);
@@ -232,6 +230,15 @@ namespace TanksIndieGame
 
         }
 
+
+        private void glControl_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.X)
+            {
+                player.Move(false);
+            }
+        }
+
         private void glControl_MouseWheel(object sender, MouseEventArgs e)
         {
             if (e.Delta > 0)
@@ -247,6 +254,7 @@ namespace TanksIndieGame
 
         #endregion
 
+        #region MAIN GAME LOOP
         private void gameLoopTimer_Tick(object sender, EventArgs e)
         {
             loops = 0;
@@ -269,8 +277,14 @@ namespace TanksIndieGame
             for (int i = 0; i < gameObjects.GameModels.Count; i++)
             {
                 if (gameObjects.GameModels[i].ObjectBehaviour != null)
+                {
                     gameObjects.GameModels[i].ObjectBehaviour.FixedUpdate();
+                }
+                gameObjects.UpdateAreas(gameObjects.GameModels[i]);
+                gameObjects.GameModels[i].CollisionObjects.AllCollidingObjects.Clear();
             }
+
+            gameObjects.CheckCollision();
 
         }
 
@@ -284,5 +298,6 @@ namespace TanksIndieGame
 
             glControl.DoRender();
         }
+        #endregion
     }
 }

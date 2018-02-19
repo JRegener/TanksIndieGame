@@ -86,8 +86,9 @@ namespace TanksIndieGame.view.tool
                     texturesArray, normalsArray);
             uint[] indicesArray = convertIndicesListToArray(indices);
 
+            vec2 collisionRect = GetCollisionRect(verticesArray);
             return loader.LoadModel(objectTag, gl, 0, 0, 0, 0, 0, 0, 1f, verticesArray, indicesArray, texturesArray,
-                normalsArray, textureImg, vertexShaderCode, fragmentShaderCode, lights);
+                normalsArray, textureImg, collisionRect.x, collisionRect.y, vertexShaderCode, fragmentShaderCode, lights);
         }
 
         private static void processVertex(String[] vertex, List<Vertex> vertices, List<uint> indices)
@@ -186,6 +187,39 @@ namespace TanksIndieGame.view.tool
             }
         }
         #endregion
+
+        private static vec2 GetCollisionRect(float[] vertices)
+        {
+            float minX = float.MaxValue;
+            float maxX = float.MinValue;
+
+            float minZ = float.MaxValue;
+            float maxZ = float.MinValue;
+
+            for(int i = 0; i < vertices.Length; i += 2)
+            {
+                if((i + 1) % 3 == 0)
+                {
+                    // Z
+                    if (vertices[i] < minZ)
+                        minZ = vertices[i];
+                    else if (vertices[i] > maxZ)
+                        maxZ = vertices[i];
+
+                }
+                else if(i % 2 == 0)
+                {
+                    // X
+
+                    if (vertices[i] < minX)
+                        minX = vertices[i];
+                    else if (vertices[i] > maxX)
+                        maxX = vertices[i];
+                }
+            }
+
+            return new vec2(maxX - minX, maxZ - minZ);
+        }
 
         #region first code
         //public static Model LoadObjModel(OpenGL gl, Loader loader, string path, Image texture,

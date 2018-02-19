@@ -22,7 +22,7 @@ namespace TanksIndieGame.view.models
             this.halfWeight = this.weight / 2;
         }
 
-        public ModelCollision(float length, float weight)
+        public ModelCollision(float weight, float length)
         {
             this.length = length;
             this.weight = weight;

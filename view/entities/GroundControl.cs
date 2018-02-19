@@ -54,10 +54,10 @@ namespace TanksIndieGame.view.entities
         public GroundControl(OpenGL gl, Loader loader, Image textureImg, string vertexShaderCode, string fragmentShaderCode, Light lights)
         {
             groundModel = loader.LoadModel("ground", gl, 0, 0, 0, 0, 0, 0, 1f,
-                vertices, indices, textureCoords, normals, 
-                textureImg, vertexShaderCode, fragmentShaderCode, lights);
+                vertices, indices, textureCoords, normals,
+                textureImg, 0, 0, vertexShaderCode, fragmentShaderCode, lights);
         }
 
-        
+
     }
 }
