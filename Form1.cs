@@ -42,7 +42,6 @@ namespace TanksIndieGame
         private Camera camera;
 
         private GameObjects gameObjects;
-        private PlayerTankBehaviour player;
 
         private Stopwatch stopwatch = null;
 
@@ -77,42 +76,34 @@ namespace TanksIndieGame
             stopwatch = Stopwatch.StartNew();
             currentTime = stopwatch.ElapsedMilliseconds;
 
-            shell = OBJLoader.LoadObjModel("shell", gl, loader,
-                @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.obj",
-                Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\shell.png"),
+            shell = OBJLoader.LoadObjModel("shell", false, gl, loader,
+                @"C:\Users\Regener\Documents\visual studio 2015\Projects\TanksIndieGame\TanksIndieGame\objects\shell.obj",
+                Image.FromFile(@"C:\Users\Regener\Documents\visual studio 2015\Projects\TanksIndieGame\TanksIndieGame\objects\shell.png"),
                 Resource.vertexModelShader, Resource.fragmentModelShader, gameObjects.Lights);
 
-            Model tank = OBJLoader.LoadObjModel("tank", gl, loader,
-                @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\tank.obj",
-                Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\tank.png"),
+            Model tank = OBJLoader.LoadObjModel("tank", false, gl, loader,
+                @"C:\Users\Regener\Documents\visual studio 2015\Projects\TanksIndieGame\TanksIndieGame\objects\tank.obj",
+                Image.FromFile(@"C:\Users\Regener\Documents\visual studio 2015\Projects\TanksIndieGame\TanksIndieGame\objects\tank.png"),
                 Resource.vertexModelShader, Resource.fragmentModelShader, gameObjects.Lights);
 
-            //tank.BaseObject.PosX = 0f;
-
-            //player = new PlayerTankBehaviour(tank);
-            //tank.ObjectBehaviour = player;
-
-            Model wall = OBJLoader.LoadObjModel("wall", gl, loader,
-                @"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\wall.obj",
-                Image.FromFile(@"C:\Users\Regener\Documents\GameProgramming\Models\Tanks\wall.png"),
+            Model enemyTank = OBJLoader.LoadObjModel("enemyTank", false, gl, loader,
+                @"C:\Users\Regener\Documents\visual studio 2015\Projects\TanksIndieGame\TanksIndieGame\objects\enemy_tank.obj",
+                Image.FromFile(@"C:\Users\Regener\Documents\visual studio 2015\Projects\TanksIndieGame\TanksIndieGame\objects\enemy_tank.png"),
                 Resource.vertexModelShader, Resource.fragmentModelShader, gameObjects.Lights);
 
-            //tank.BaseObject.Scale = 1f;
-            //shell.BaseObject.Scale = 1f;
-            //wall.BaseObject.Scale = 1f;
+            Model wall = OBJLoader.LoadObjModel("wall", true, gl, loader,
+                @"C:\Users\Regener\Documents\visual studio 2015\Projects\TanksIndieGame\TanksIndieGame\objects\wall.obj",
+                Image.FromFile(@"C:\Users\Regener\Documents\visual studio 2015\Projects\TanksIndieGame\TanksIndieGame\objects\wall_stone.png"),
+                Resource.vertexModelShader, Resource.fragmentModelShader, gameObjects.Lights);
 
-            player = new PlayerTankBehaviour(tank);
-            tank.ObjectBehaviour = player;
+            gameObjects.PlayerTankBehaviour = new PlayerTankBehaviour(tank);
+            tank.ObjectBehaviour = gameObjects.PlayerTankBehaviour;
 
             gameObjects.DefaultWall = wall;
             gameObjects.DefaultShell = shell;
-            gameObjects.PlayerTank = tank;
+            gameObjects.DefaultPlayerTank = tank;
+            gameObjects.DefaultEnemyTank = enemyTank;
             gameObjects.LoadMap(Resource.map);
-            //wall.BaseObject.PosZ = 5f;
-
-            //gameObjects.GameModels.Add(wall);
-            //gameObjects.GameModels.Add(shell);
-            //gameObjects.GameModels.Add(tank);
 
             gameLoopTimer.Start();
         }
@@ -132,22 +123,18 @@ namespace TanksIndieGame
         #region key/mouse control
         private void glControl_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Left)
             {
                 isMouseDown = true;
                 oldPosition = e.Location;
                 //player.Move(false);
-            }
-            if (e.Button == MouseButtons.Left)
-            {
-                player.Fire();
             }
 
         }
 
         private void glControl_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Left)
             {
                 isMouseDown = false;
             }
@@ -156,8 +143,8 @@ namespace TanksIndieGame
         private void glControl_MouseMove(object sender, MouseEventArgs e)
         {
             mousePicker.Update(e.X, e.Y, glControl.Width, glControl.Height);
-            player.SetViewDirection(mousePicker.CurGroundPoint);
-            if (e.Button == MouseButtons.Right)
+            ((PlayerTankBehaviour)gameObjects.PlayerTankBehaviour).SetViewDirection(mousePicker.CurGroundPoint);
+            if (e.Button == MouseButtons.Left)
             {
                 if (!isMouseDown)
                 {
@@ -225,7 +212,12 @@ namespace TanksIndieGame
 
             if(e.KeyCode == Keys.X)
             {
-                player.Move(true);
+                ((PlayerTankBehaviour)gameObjects.PlayerTankBehaviour).Move(true);
+            }
+
+            if(e.KeyCode == Keys.F)
+            {
+                ((PlayerTankBehaviour)gameObjects.PlayerTankBehaviour).Fire();
             }
 
         }
@@ -235,7 +227,7 @@ namespace TanksIndieGame
         {
             if (e.KeyCode == Keys.X)
             {
-                player.Move(false);
+                ((PlayerTankBehaviour)gameObjects.PlayerTankBehaviour).Move(false);
             }
         }
 
@@ -286,6 +278,7 @@ namespace TanksIndieGame
 
             gameObjects.CheckCollision();
 
+            gameObjects.UpdateCollision();
         }
 
         private void UpdateDisplay(float interpolation)

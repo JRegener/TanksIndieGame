@@ -76,8 +76,10 @@
     <Compile Include="logic\MainGameLoopThread.cs" />
     <Compile Include="logic\ObjectBehaviour.cs" />
     <Compile Include="logic\SceneSettings.cs" />
+    <Compile Include="logic\scripts\EnemyTankBehaviour.cs" />
     <Compile Include="logic\scripts\PlayerTankBehaviour.cs" />
     <Compile Include="logic\scripts\ShellBehaviour.cs" />
+    <Compile Include="logic\scripts\TankBehaviour.cs" />
     <Compile Include="Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -86,7 +88,6 @@
     <Compile Include="view\entities\GroundControl.cs" />
     <Compile Include="view\models\BaseObject.cs" />
     <Compile Include="view\models\Camera.cs" />
-    <Compile Include="view\models\CollisionData.cs" />
     <Compile Include="view\models\CollisionObjects.cs" />
     <Compile Include="view\models\Light.cs" />
     <Compile Include="view\models\Model.cs" />

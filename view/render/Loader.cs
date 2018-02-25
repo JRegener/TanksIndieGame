@@ -19,6 +19,32 @@ namespace TanksIndieGame.view.render
         private List<uint> vbos = new List<uint>();
         private List<uint> textures = new List<uint>();
 
+        public Model LoadModel(string objectTag, bool isKinematic, OpenGL gl, float posX, float posY, float posZ,
+            float rotX, float rotY, float rotZ, float scale,
+            float[] vertices, uint[] indices, float[] uv, float[] normals, Image texture,
+            float radius,
+            string vertexShaderCode, string fragmentShaderCode, Light lights)
+        {
+            BaseObject baseModel = LoadBaseModel(posX, posY, posZ, rotX, rotY, rotZ, scale);
+            ModelView modelView = LoadModelView(gl, vertices, indices, uv, normals, texture);
+            BaseShader modelShader = LoadModelShader(gl, vertexShaderCode, fragmentShaderCode, lights);
+            ModelCollision modelCollision = LoadModelCollision(radius);
+
+            return new Model(gl, this, objectTag, isKinematic, baseModel, modelView, modelShader, modelCollision);
+        }
+
+        public void FreeModel(OpenGL gl, Model model)
+        {
+            DeleteVbo(gl, model.ModelView.IndicesId);
+            DeleteVbo(gl, model.ModelView.VerticesId);
+            DeleteVbo(gl, model.ModelView.UvId);
+            DeleteVbo(gl, model.ModelView.NormalsId);
+
+            DeleteTexture(gl, model.ModelView.TextureId);
+
+            DeleteVao(gl, model.ModelView.VaoId);
+        }
+
         private uint BindVao(OpenGL gl)
         {
             uint[] ids = new uint[1];
@@ -116,7 +142,7 @@ namespace TanksIndieGame.view.render
             return new BaseObject(posX, posY, posZ, rotX, rotY, rotZ, scale);
         }
 
-        private ModelView LoadModelView(OpenGL gl, float[] vertices, uint[] indices, 
+        private ModelView LoadModelView(OpenGL gl, float[] vertices, uint[] indices,
             float[] uv, float[] normals, Image texture)
         {
             uint vaoId = BindVao(gl);
@@ -138,36 +164,12 @@ namespace TanksIndieGame.view.render
             return new ModelShader(gl, vertexShaderCode, fragmentShaderCode, lights);
         }
 
-        private ModelCollision LoadModelCollision( float weight, float length)
+        private ModelCollision LoadModelCollision(float radius)
         {
-            return new ModelCollision(weight, length);
+            return new ModelCollision(radius);
         }
 
-        public Model LoadModel(string objectTag, OpenGL gl, float posX, float posY, float posZ,
-            float rotX, float rotY, float rotZ, float scale,
-            float[] vertices, uint[] indices, float[] uv, float[] normals, Image texture,
-            float widthCollision, float lengthCollision,
-            string vertexShaderCode, string fragmentShaderCode, Light lights)
-        {
-            BaseObject baseModel = LoadBaseModel(posX, posY, posZ, rotX, rotY, rotZ, scale);
-            ModelView modelView = LoadModelView(gl, vertices, indices, uv, normals, texture);
-            BaseShader modelShader = LoadModelShader(gl, vertexShaderCode, fragmentShaderCode, lights);
-            ModelCollision modelCollision = LoadModelCollision(widthCollision, lengthCollision);
-
-            return new Model(gl, this, objectTag, baseModel, modelView, modelShader, modelCollision);
-        }
-
-        //public void FreeModel(OpenGL gl, Model model)
-        //{
-        //    DeleteVbo(gl, model.IndicesId);
-        //    DeleteVbo(gl, model.VerticesId);
-        //    DeleteVbo(gl, model.UvId);
-        //    DeleteVbo(gl, model.NormalsId);
-
-        //    DeleteTexture(gl, model.GetTextureId());
-
-        //    DeleteVao(gl, model.Id);
-        //}
+        
 
         //private void UpdateVbo(OpenGL gl, uint id, uint attributeIndex, int stride, float[] data)
         //{

@@ -7,13 +7,17 @@ using System.Threading.Tasks;
 
 namespace TanksIndieGame.view.models
 {
-    public class BaseObject
+    public class BaseObject 
     {
+        private bool isDisposed = false;
+
         private float posX, posY, posZ;
 
         private float rotX, rotY, rotZ;
 
         private float scale;
+
+        private vec3 oldPosition;
 
         private vec3 viewPosition;
 
@@ -134,6 +138,8 @@ namespace TanksIndieGame.view.models
             get { return new vec3(posX, posY, posZ); }
             set
             {
+                oldPosition = new vec3(posX, posY, posZ);
+
                 posX = value.x;
                 posY = value.y;
                 posZ = value.z;
@@ -181,8 +187,21 @@ namespace TanksIndieGame.view.models
             }
         }
 
-        #endregion
+        public vec3 OldPosition
+        {
+            get
+            {
+                return oldPosition;
+            }
 
+            set
+            {
+                oldPosition = value;
+            }
+        }
+
+
+        #endregion
 
     }
 }

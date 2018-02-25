@@ -8,94 +8,52 @@ namespace TanksIndieGame.view.models
 {
     public class ModelCollision
     {
-        private float length; // Z
-        private float weight; // X
+        private float radius;
 
-        private float halfLength;
-        private float halfWeight;
+        private float halfRadius;
+
+
 
         public ModelCollision(ModelCollision modelCollision)
         {
-            this.length = modelCollision.Length;
-            this.weight = modelCollision.Weight;
-            this.halfLength = this.length / 2;
-            this.halfWeight = this.weight / 2;
+            this.radius = modelCollision.Radius;
+            this.halfRadius = this.radius / 2;
         }
 
-        public ModelCollision(float weight, float length)
+        public ModelCollision(float radius)
         {
-            this.length = length;
-            this.weight = weight;
-            this.halfLength = this.length / 2;
-            this.halfWeight = this.weight / 2;
+            this.radius = radius;
+            this.halfRadius = this.radius / 2;
         }
 
 
         #region properties
-        /// <summary>
-        /// Z axis
-        /// </summary>
-        public float Length
+
+        public float Radius
         {
             get
             {
-                return length;
+                return radius;
             }
 
             set
             {
-                length = value;
+                radius = value;
             }
         }
 
-        /// <summary>
-        /// X Axis
-        /// </summary>
-        public float Weight
+        public float HalfRadius
         {
             get
             {
-                return weight;
+                return halfRadius;
             }
 
             set
             {
-                weight = value;
+                halfRadius = value;
             }
         }
-
-        /// <summary>
-        /// Z axis
-        /// </summary>
-        public float HalfLength
-        {
-            get
-            {
-                return halfLength;
-            }
-
-            set
-            {
-                halfLength = value;
-            }
-        }
-
-        /// <summary>
-        /// X Axis
-        /// </summary>
-        public float HalfWeight
-        {
-            get
-            {
-                return halfWeight;
-            }
-
-            set
-            {
-                halfWeight = value;
-            }
-        }
-
         #endregion
 
     }

@@ -15,11 +15,14 @@ namespace TanksIndieGame.view.models
 {
     public class Model : ICloneable
     {
+
         private OpenGL gl;
 
         private Loader loader;
 
         private string tag;
+
+        private bool isKinematic;
 
         private CollisionObjects collisionObjects = null;
 
@@ -33,19 +36,20 @@ namespace TanksIndieGame.view.models
 
         private ModelCollision modelCollision = null;
 
-        public Model(OpenGL gl, Loader loader, string tag, BaseObject baseObject, 
+        public Model(OpenGL gl, Loader loader, string tag, bool isKinematic, BaseObject baseObject,
             ModelView modelView, BaseShader baseShader, ModelCollision modelCollision)
         {
             this.gl = gl;
             this.loader = loader;
             this.tag = tag;
+            this.isKinematic = isKinematic;
             this.baseObject = baseObject;
             this.modelView = modelView;
             this.baseShader = baseShader;
             this.modelCollision = modelCollision;
             this.collisionObjects = new CollisionObjects();
         }
-
+        #region properties
         public string Tag
         {
             get
@@ -136,14 +140,48 @@ namespace TanksIndieGame.view.models
             }
         }
 
+        public bool IsKinematic
+        {
+            get
+            {
+                return isKinematic;
+            }
+
+            set
+            {
+                isKinematic = value;
+            }
+        }
+
+        #endregion
+
         public object Clone()
         {
-            Model model = loader.LoadModel(String.Copy(this.tag), gl, 0, 0, 0, 0, 0, 0, 1f,
-                (float[])this.modelView.Vertices.Clone(), (uint[])this.modelView.Indices.Clone(), 
+            Model model = loader.LoadModel(String.Copy(this.tag), this.isKinematic, gl, 0, 0, 0, 0, 0, 0, 1f,
+                (float[])this.modelView.Vertices.Clone(), (uint[])this.modelView.Indices.Clone(),
                 (float[])this.modelView.Uv.Clone(), (float[])this.modelView.Normals.Clone(),
-                (Image)this.modelView.Texture.Clone(), this.ModelCollision.Weight, this.ModelCollision.Length, 
+                (Image)this.modelView.Texture.Clone(), this.ModelCollision.Radius,
                 this.baseShader.VertexShaderCode, this.baseShader.FragmentShaderCode, this.baseShader.Lights);
             return model;
+        }
+
+        public void Destroy()
+        {
+
+            //free video memory
+            loader.FreeModel(gl, this);
+
+            collisionObjects.Destroy();
+            collisionObjects = null;
+
+            baseObject = null;
+
+            modelView.Destroy();
+            modelView = null;
+
+            baseShader = null;
+
+            modelCollision = null;
         }
     }
 }

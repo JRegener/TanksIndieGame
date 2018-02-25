@@ -13,7 +13,7 @@ namespace TanksIndieGame.view.models
         private List<vec2> areas = new List<vec2>();
         private List<int> idsInAreas = new List<int>();
 
-        private List<CollisionData> allCollidingObjects = new List<CollisionData>();
+        private List<Model> allCollidingObjects = new List<Model>();
 
         #region properties
         public List<vec2> Areas
@@ -42,7 +42,7 @@ namespace TanksIndieGame.view.models
             }
         }
 
-        public List<CollisionData> AllCollidingObjects
+        public List<Model> AllCollidingObjects
         {
             get
             {
@@ -58,6 +58,13 @@ namespace TanksIndieGame.view.models
 
         #endregion
 
-        
+        public void Destroy()
+        {
+            
+            allCollidingObjects = null;
+            areas = null;
+            idsInAreas = null;
+        }
+
     }
 }

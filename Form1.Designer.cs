@@ -49,7 +49,7 @@ namespace TanksIndieGame
             this.glControl.OpenGLVersion = SharpGL.Version.OpenGLVersion.OpenGL4_2;
             this.glControl.RenderContextType = SharpGL.RenderContextType.NativeWindow;
             this.glControl.RenderTrigger = SharpGL.RenderTrigger.Manual;
-            this.glControl.Size = new System.Drawing.Size(861, 572);
+            this.glControl.Size = new System.Drawing.Size(1151, 572);
             this.glControl.TabIndex = 0;
             this.glControl.OpenGLInitialized += new System.EventHandler(this.glControl_OpenGLInitialized);
             this.glControl.OpenGLDraw += new SharpGL.RenderEventHandler(this.glControl_OpenGLDraw);
@@ -64,7 +64,7 @@ namespace TanksIndieGame
             // 
             this.lblInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblInfo.AutoSize = true;
-            this.lblInfo.Location = new System.Drawing.Point(890, 27);
+            this.lblInfo.Location = new System.Drawing.Point(1169, 27);
             this.lblInfo.Name = "lblInfo";
             this.lblInfo.Size = new System.Drawing.Size(24, 13);
             this.lblInfo.TabIndex = 1;
@@ -79,7 +79,7 @@ namespace TanksIndieGame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1204, 639);
+            this.ClientSize = new System.Drawing.Size(1288, 639);
             this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.glControl);
             this.Name = "Form1";

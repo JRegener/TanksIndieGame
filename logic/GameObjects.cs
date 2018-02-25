@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TanksIndieGame.logic.scripts;
 using TanksIndieGame.view.models;
+using TanksIndieGame.view.render;
 
 namespace TanksIndieGame.logic
 {
@@ -47,12 +49,15 @@ namespace TanksIndieGame.logic
 
 
         private Model defaultWall = null;
-        private Model playerTank = null;
+        private Model defaultPlayerTank = null;
         private Model defaultShell = null;
-        private Model defaultBotTank = null;
+        private Model defaultEnemyTank = null;
 
 
+        private ObjectBehaviour playerTankBehaviour = null;
+        private ObjectBehaviour enemyTankBehaviour = null;
 
+        #region properties
         public List<Model> GameModels
         {
             get
@@ -84,16 +89,16 @@ namespace TanksIndieGame.logic
             }
         }
 
-        public Model PlayerTank
+        public Model DefaultPlayerTank
         {
             get
             {
-                return playerTank;
+                return defaultPlayerTank;
             }
 
             set
             {
-                playerTank = value;
+                defaultPlayerTank = value;
             }
         }
 
@@ -110,18 +115,46 @@ namespace TanksIndieGame.logic
             }
         }
 
-        public Model DefaultBotTank
+        public Model DefaultEnemyTank
         {
             get
             {
-                return defaultBotTank;
+                return defaultEnemyTank;
             }
 
             set
             {
-                defaultBotTank = value;
+                defaultEnemyTank = value;
             }
         }
+
+        public ObjectBehaviour PlayerTankBehaviour
+        {
+            get
+            {
+                return playerTankBehaviour;
+            }
+
+            set
+            {
+                playerTankBehaviour = value;
+            }
+        }
+
+        public ObjectBehaviour EnemyTankBehaviour
+        {
+            get
+            {
+                return enemyTankBehaviour;
+            }
+
+            set
+            {
+                enemyTankBehaviour = value;
+            }
+        }
+
+        #endregion
 
         private GameObjects() { }
 
@@ -152,20 +185,29 @@ namespace TanksIndieGame.logic
                     }
                     else if (lines[i][j].Equals((char)GameModel.Player))
                     {
-                        if (playerTank != null)
+                        if (defaultPlayerTank != null)
                         {
-                            playerTank.BaseObject.Position = new vec3(x, 0, z);
-                            gameModels.Add(playerTank);
+                            defaultPlayerTank.BaseObject.Position = new vec3(x, 0, z);
+                            defaultPlayerTank.BaseObject.OldPosition = new vec3(x, 0, z);
+                            gameModels.Add(defaultPlayerTank);
                         }
                     }
                     else if (lines[i][j].Equals((char)GameModel.Bot))
                     {
-
+                        if (defaultEnemyTank != null)
+                        {
+                            Model newBot = (Model)defaultEnemyTank.Clone();
+                            newBot.BaseObject.Position = new vec3(x, 0, z);
+                            newBot.BaseObject.OldPosition = new vec3(x, 0, z);
+                            newBot.ObjectBehaviour = new EnemyTankBehaviour(newBot);
+                            gameModels.Add(newBot);
+                        }
                     }
 
                     x += step;
                 }
-                mapWidth = x;
+                if (mapWidth < x)
+                    mapWidth = x;
                 x = 0;
                 z += step;
             }
@@ -188,14 +230,40 @@ namespace TanksIndieGame.logic
 
         }
 
+        public void UpdateCollision()
+        {
+            for (int i = 0; i < gameModels.Count; i++)
+            {
+                CollisionResponse(gameModels[i]);
+            }
+        }
+
+        private void CollisionResponse(Model obj)
+        {
+
+            if (obj.IsKinematic)
+                return;
+
+            for (int i = 0; i < obj.CollisionObjects.AllCollidingObjects.Count; i++)
+            {
+                //kinematic
+                if (obj.ObjectBehaviour == null)
+                    continue;
+
+                obj.ObjectBehaviour.CollisionDetected(obj.CollisionObjects.AllCollidingObjects[i]);
+                if (obj.CollisionObjects == null)
+                    break;
+            }
+        }
+
         public void CheckCollision()
         {
-            vec2 overlap;
             for (int z = 0; z < verticalAreasCount; ++z)
             {
                 for (int x = 0; x < horizontalAreasCount; ++x)
                 {
                     List<Model> objInArea = objectsInArea[x, z];
+
                     for (int i = 0; i < objInArea.Count - 1; ++i)
                     {
                         Model obj1 = objInArea[i];
@@ -203,14 +271,13 @@ namespace TanksIndieGame.logic
                         {
                             Model obj2 = objInArea[j];
 
-                            if (!obj1.Tag.Equals("wall") || !obj2.Tag.Equals("wall"))
+                            if (!obj1.IsKinematic || !obj2.IsKinematic)
                             {
-                                if (OverlapsSigned(obj1, obj2, out overlap) && HasCollisionDataFor(obj1, obj2))
+                                if (OverlapsSigned(obj1, obj2) && !HasCollisionDataFor(obj1, obj2))
                                 {
-                                    obj1.CollisionObjects.AllCollidingObjects.Add(new CollisionData(obj2, overlap,
-                                        new vec2(obj1.BaseObject.Position), new vec2(obj2.BaseObject.Position)));
-                                    obj2.CollisionObjects.AllCollidingObjects.Add(new CollisionData(obj1, new vec2(-overlap.x, -overlap.y),
-                                        new vec2(obj2.BaseObject.Position), new vec2(obj1.BaseObject.Position)));
+                                    obj1.CollisionObjects.AllCollidingObjects.Add(obj2);
+                                    obj2.CollisionObjects.AllCollidingObjects.Add(obj1);
+
 
                                 }
                             }
@@ -220,51 +287,16 @@ namespace TanksIndieGame.logic
             }
         }
 
-        private bool OverlapsSigned(Model first, Model second, out vec2 overlap)
-        {
-            overlap = new vec2();
-
-            if (Math.Abs(first.BaseObject.Position.x - second.BaseObject.Position.x) > first.ModelCollision.HalfWeight + second.ModelCollision.HalfWeight
-                || Math.Abs(first.BaseObject.Position.z - second.BaseObject.Position.z) > first.ModelCollision.HalfLength + second.ModelCollision.HalfLength)
-                return false;
-
-            overlap = new vec2(Math.Sign(first.BaseObject.Position.x - second.BaseObject.Position.x)
-                * ((first.ModelCollision.HalfWeight + second.ModelCollision.HalfWeight)
-                - Math.Abs(first.BaseObject.Position.x - second.BaseObject.Position.x)),
-                Math.Sign(first.BaseObject.Position.z - second.BaseObject.Position.z)
-                * ((first.ModelCollision.HalfLength + second.ModelCollision.HalfLength)
-                - Math.Abs(first.BaseObject.Position.z - second.BaseObject.Position.z)));
-
-            return true;
-        }
-
-        private bool HasCollisionDataFor(Model first, Model second)
-        {
-            for (int i = 0; i < first.CollisionObjects.AllCollidingObjects.Count; ++i)
-            {
-                if (first.CollisionObjects.AllCollidingObjects[i].other == second)
-                    return true;
-            }
-
-            return false;
-        }
-
-        private vec2 GetMapObjectPosition(vec2 position)
-        {
-            return new vec2(position.x - mapStartPosition.x,
-                position.y - mapStartPosition.y);
-        }
-
         public void UpdateAreas(Model obj)
         {
             //Get point in local map coordinates
 
-            vec2 topLeft = GetMapObjectPosition(new vec2(obj.BaseObject.PosX - obj.ModelCollision.HalfWeight,
-                obj.BaseObject.PosZ - obj.ModelCollision.HalfLength));
-            vec2 topRight = GetMapObjectPosition(new vec2(obj.BaseObject.PosX + obj.ModelCollision.HalfWeight,
-                obj.BaseObject.PosZ - obj.ModelCollision.HalfLength));
-            vec2 bottomLeft = GetMapObjectPosition(new vec2(obj.BaseObject.PosX - obj.ModelCollision.HalfWeight,
-                obj.BaseObject.PosZ + obj.ModelCollision.HalfLength));
+            vec2 topLeft = GetMapObjectPosition(new vec2(obj.BaseObject.PosX - obj.ModelCollision.HalfRadius,
+                obj.BaseObject.PosZ - obj.ModelCollision.HalfRadius));
+            vec2 topRight = GetMapObjectPosition(new vec2(obj.BaseObject.PosX + obj.ModelCollision.HalfRadius,
+                obj.BaseObject.PosZ - obj.ModelCollision.HalfRadius));
+            vec2 bottomLeft = GetMapObjectPosition(new vec2(obj.BaseObject.PosX - obj.ModelCollision.HalfRadius,
+                obj.BaseObject.PosZ + obj.ModelCollision.HalfRadius));
             vec2 bottomRight = new vec2();
 
             topLeft.x = (int)(topLeft.x / mapGridAreaWidth);
@@ -328,6 +360,38 @@ namespace TanksIndieGame.logic
 
         }
 
+
+        private bool OverlapsSigned(Model first, Model second)
+        {
+            if (Math.Abs(first.BaseObject.Position.x - second.BaseObject.Position.x) >
+                first.ModelCollision.HalfRadius + second.ModelCollision.HalfRadius
+                || Math.Abs(first.BaseObject.Position.z - second.BaseObject.Position.z) >
+                first.ModelCollision.HalfRadius + second.ModelCollision.HalfRadius)
+                return false;
+
+            return true;
+        }
+
+        private bool HasCollisionDataFor(Model first, Model second)
+        {
+            for (int i = 0; i < first.CollisionObjects.AllCollidingObjects.Count; ++i)
+            {
+                if (first.CollisionObjects.AllCollidingObjects[i] == second)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private vec2 GetMapObjectPosition(vec2 position)
+        {
+            return new vec2(position.x - mapStartPosition.x,
+                position.y - mapStartPosition.y);
+        }
+
+
         private void AddObjectToArea(vec2 areaIndex, Model obj)
         {
             List<Model> area = objectsInArea[(int)areaIndex.x, (int)areaIndex.y];
@@ -340,7 +404,7 @@ namespace TanksIndieGame.logic
             area.Add(obj);
         }
 
-        private void RemoveObjectFromArea(vec2 areaIndex, int objIndexInArea, Model obj)
+        public void RemoveObjectFromArea(vec2 areaIndex, int objIndexInArea, Model obj)
         {
             List<Model> area = objectsInArea[(int)areaIndex.x, (int)areaIndex.y];
 

@@ -16,7 +16,7 @@ namespace TanksIndieGame.view.tool
     public class OBJLoader
     {
         #region comment
-        public static Model LoadObjModel(string objectTag, OpenGL gl, Loader loader, string path, Image textureImg,
+        public static Model LoadObjModel(string objectTag, bool isKinematic, OpenGL gl, Loader loader, string path, Image textureImg,
             string vertexShaderCode, string fragmentShaderCode, Light lights)
         {
             string line;
@@ -86,9 +86,9 @@ namespace TanksIndieGame.view.tool
                     texturesArray, normalsArray);
             uint[] indicesArray = convertIndicesListToArray(indices);
 
-            vec2 collisionRect = GetCollisionRect(verticesArray);
-            return loader.LoadModel(objectTag, gl, 0, 0, 0, 0, 0, 0, 1f, verticesArray, indicesArray, texturesArray,
-                normalsArray, textureImg, collisionRect.x, collisionRect.y, vertexShaderCode, fragmentShaderCode, lights);
+            float collisionRadius = GetCollisionRadius(vertices);
+            return loader.LoadModel(objectTag, isKinematic, gl, 0, 0, 0, 0, 0, 0, 1f, verticesArray, indicesArray, texturesArray,
+                normalsArray, textureImg, collisionRadius, vertexShaderCode, fragmentShaderCode, lights);
         }
 
         private static void processVertex(String[] vertex, List<Vertex> vertices, List<uint> indices)
@@ -188,7 +188,7 @@ namespace TanksIndieGame.view.tool
         }
         #endregion
 
-        private static vec2 GetCollisionRect(float[] vertices)
+        private static float GetCollisionRadius(List<Vertex> vertices)
         {
             float minX = float.MaxValue;
             float maxX = float.MinValue;
@@ -196,29 +196,22 @@ namespace TanksIndieGame.view.tool
             float minZ = float.MaxValue;
             float maxZ = float.MinValue;
 
-            for(int i = 0; i < vertices.Length; i += 2)
+            vec3 pos;
+            for(int i = 0; i < vertices.Count; i++)
             {
-                if((i + 1) % 3 == 0)
-                {
-                    // Z
-                    if (vertices[i] < minZ)
-                        minZ = vertices[i];
-                    else if (vertices[i] > maxZ)
-                        maxZ = vertices[i];
+                pos = vertices[i].getPosition();
+                if (pos.x < minX)
+                    minX = pos.x;
+                if (pos.x > maxX)
+                    maxX = pos.x;
 
-                }
-                else if(i % 2 == 0)
-                {
-                    // X
-
-                    if (vertices[i] < minX)
-                        minX = vertices[i];
-                    else if (vertices[i] > maxX)
-                        maxX = vertices[i];
-                }
+                if (pos.z < minZ)
+                    minZ = pos.z;
+                if (pos.z > maxZ)
+                    maxZ = pos.z;
             }
 
-            return new vec2(maxX - minX, maxZ - minZ);
+            return Math.Min(Math.Abs(maxX - minX), Math.Abs(maxZ - minZ));
         }
 
         #region first code

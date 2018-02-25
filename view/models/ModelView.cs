@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TanksIndieGame.view.models
 {
-    public class ModelView 
+    public class ModelView
     {
         private uint vaoId;
 
@@ -187,5 +187,14 @@ namespace TanksIndieGame.view.models
 
         #endregion
 
+        public void Destroy()
+        {
+            texture.Dispose();
+
+            vertices = null;
+            indices = null;
+            uv = null;
+            normals = null;
+        }
     }
 }
