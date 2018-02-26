@@ -19,7 +19,7 @@ namespace TanksIndieGame.logic
         // Camera
 
         // Light
-        public static readonly Light BASE_LIGHT = new Light(new vec3(0, 1000, 0), new vec3(1, 1, 1));
+        public static readonly Light BASE_LIGHT = new Light(new vec3(-500, 1000, -500), new vec3(1, 1, 1));
 
         // Map
 

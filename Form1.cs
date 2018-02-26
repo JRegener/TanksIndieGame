@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TanksIndieGame.logic;
 using TanksIndieGame.logic.scripts;
+using TanksIndieGame.view.entities;
 using TanksIndieGame.view.models;
 using TanksIndieGame.view.render;
 using TanksIndieGame.view.tool;
@@ -45,8 +46,6 @@ namespace TanksIndieGame
 
         private Stopwatch stopwatch = null;
 
-        Model shell;
-
         public Form1()
         {
             InitializeComponent();
@@ -58,6 +57,12 @@ namespace TanksIndieGame
             {
                 return;
             }
+
+            if (glControl.Width == 0 || glControl.Height == 0)
+            {
+                return;
+            }
+
             renderer.SetViewProperties(SceneSettings.FOV, SceneSettings.NEAR,
                 SceneSettings.FAR, glControl.Width, glControl.Height);
         }
@@ -76,10 +81,15 @@ namespace TanksIndieGame
             stopwatch = Stopwatch.StartNew();
             currentTime = stopwatch.ElapsedMilliseconds;
 
-            shell = OBJLoader.LoadObjModel("shell", false, gl, loader,
+            GroundControl ground = new GroundControl(gl, loader, Image.FromFile(@"C:\Users\Regener\Documents\visual studio 2015\Projects\TanksIndieGame\TanksIndieGame\objects\ground.png"),
+                Resource.vertexModelShader, Resource.fragmentModelShader, gameObjects.Lights);
+
+            Model shell = OBJLoader.LoadObjModel("shell", false, gl, loader,
                 @"C:\Users\Regener\Documents\visual studio 2015\Projects\TanksIndieGame\TanksIndieGame\objects\shell.obj",
                 Image.FromFile(@"C:\Users\Regener\Documents\visual studio 2015\Projects\TanksIndieGame\TanksIndieGame\objects\shell.png"),
                 Resource.vertexModelShader, Resource.fragmentModelShader, gameObjects.Lights);
+
+            shell.BaseObject.Scale = 50f;
 
             Model tank = OBJLoader.LoadObjModel("tank", false, gl, loader,
                 @"C:\Users\Regener\Documents\visual studio 2015\Projects\TanksIndieGame\TanksIndieGame\objects\tank.obj",
@@ -98,6 +108,8 @@ namespace TanksIndieGame
 
             gameObjects.PlayerTankBehaviour = new PlayerTankBehaviour(tank);
             tank.ObjectBehaviour = gameObjects.PlayerTankBehaviour;
+
+            gameObjects.GameModels.Add(ground.GroundModel);
 
             gameObjects.DefaultWall = wall;
             gameObjects.DefaultShell = shell;
@@ -134,52 +146,52 @@ namespace TanksIndieGame
 
         private void glControl_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                isMouseDown = false;
-            }
+            //if (e.Button == MouseButtons.Left)
+            //{
+            //    isMouseDown = false;
+            //}
         }
 
         private void glControl_MouseMove(object sender, MouseEventArgs e)
         {
             mousePicker.Update(e.X, e.Y, glControl.Width, glControl.Height);
             ((PlayerTankBehaviour)gameObjects.PlayerTankBehaviour).SetViewDirection(mousePicker.CurGroundPoint);
-            if (e.Button == MouseButtons.Left)
-            {
-                if (!isMouseDown)
-                {
-                    return;
-                }
+            //if (e.Button == MouseButtons.Left)
+            //{
+            //    if (!isMouseDown)
+            //    {
+            //        return;
+            //    }
 
-                int dx = oldPosition.X - e.Location.X;
-                int dy = oldPosition.Y - e.Location.Y;
+            //    int dx = oldPosition.X - e.Location.X;
+            //    int dy = oldPosition.Y - e.Location.Y;
 
-                if (Math.Abs(dy) > Math.Abs(dx))
-                {
-                    if (dy < 0)
-                    {
-                        camera.IncreasePitch(1);
-                    }
-                    else
-                    {
-                        camera.DecreasePitch(1);
-                    }
-                    oldPosition = e.Location;
-                }
-                if (Math.Abs(dy) < Math.Abs(dx))
-                {
-                    if (dx < 0)
-                    {
-                        camera.IncreaseAroundPoint(1);
-                    }
-                    else
-                    {
-                        camera.DecreaseAroundPoint(1);
-                    }
-                    oldPosition = e.Location;
-                }
+            //    if (Math.Abs(dy) > Math.Abs(dx))
+            //    {
+            //        if (dy < 0)
+            //        {
+            //            camera.IncreasePitch(1);
+            //        }
+            //        else
+            //        {
+            //            camera.DecreasePitch(1);
+            //        }
+            //        oldPosition = e.Location;
+            //    }
+            //    if (Math.Abs(dy) < Math.Abs(dx))
+            //    {
+            //        if (dx < 0)
+            //        {
+            //            camera.IncreaseAroundPoint(1);
+            //        }
+            //        else
+            //        {
+            //            camera.DecreaseAroundPoint(1);
+            //        }
+            //        oldPosition = e.Location;
+            //    }
 
-            }
+            //}
 
 
 
@@ -188,25 +200,25 @@ namespace TanksIndieGame
 
         private void glControl_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.W)
-            {
-                camera.MoveForward();
-            }
+            //if (e.KeyCode == Keys.W)
+            //{
+            //    camera.MoveForward();
+            //}
 
-            if (e.KeyCode == Keys.S)
-            {
-                camera.MoveBack();
-            }
+            //if (e.KeyCode == Keys.S)
+            //{
+            //    camera.MoveBack();
+            //}
 
-            if (e.KeyCode == Keys.A)
-            {
-                camera.MoveLeft();
-            }
+            //if (e.KeyCode == Keys.A)
+            //{
+            //    camera.MoveLeft();
+            //}
 
-            if (e.KeyCode == Keys.D)
-            {
-                camera.MoveRight();
-            }
+            //if (e.KeyCode == Keys.D)
+            //{
+            //    camera.MoveRight();
+            //}
 
 
 
@@ -229,19 +241,6 @@ namespace TanksIndieGame
             {
                 ((PlayerTankBehaviour)gameObjects.PlayerTankBehaviour).Move(false);
             }
-        }
-
-        private void glControl_MouseWheel(object sender, MouseEventArgs e)
-        {
-            if (e.Delta > 0)
-            {
-                camera.DecreaceDistance();
-            }
-            else
-            {
-                camera.IncreaceDistance();
-            }
-
         }
 
         #endregion

@@ -9,13 +9,13 @@ namespace TanksIndieGame.view.models
 {
     public class Camera
     {
-        private vec3 direction = new vec3(0, 0, 0);
+        private vec3 direction = new vec3(60, 0, 80);
         private vec3 position = new vec3(0, 0, 0);
-        private float pitch = 45f;
-        private float yaw = -45f;
-        private float distance = 150f;
+        private float pitch = 73f;
+        private float yaw = 360f;
+        private float distance = 139f;
         private float projectionDistance;
-        private float angelAround = 45f;
+        private float angelAround = 90f;
 
         private float step = 1f;
 

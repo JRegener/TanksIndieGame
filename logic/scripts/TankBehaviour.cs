@@ -109,6 +109,7 @@ namespace TanksIndieGame.logic.scripts
 
             shell.BaseObject.Position = parentModel.BaseObject.Position + GLMath.RotateVector(rotationAngle, gameObjects.ShellShiftPosition);
             shell.BaseObject.Rotation = new vec3(0, rotationAngle + (float)Math.PI, 0);
+            shell.BaseObject.Scale = 2f;
 
             ShellBehaviour shellBehaviour = new ShellBehaviour(shell);
             shellBehaviour.MoveDirection = new vec3(moveDirection);

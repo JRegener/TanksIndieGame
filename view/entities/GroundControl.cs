@@ -56,6 +56,8 @@ namespace TanksIndieGame.view.entities
             groundModel = loader.LoadModel("ground", true, gl, 0, 0, 0, 0, 0, 0, 1f,
                 vertices, indices, textureCoords, normals,
                 textureImg, 0, vertexShaderCode, fragmentShaderCode, lights);
+
+            groundModel.BaseObject.Scale = 140f;
         }
 
 
